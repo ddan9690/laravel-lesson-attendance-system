@@ -17,7 +17,7 @@ if [ "$role" = "app" ]; then
     # Run only once
 
     # Run the application in the background to avoid blocking bitnami execution.
-    nohup php artisan octane:start --host=0.0.0.0 --server=swoole --port=8089 &
+    # nohup php artisan octane:start --host=0.0.0.0 --server=swoole --port=8089 &
  
 elif [ "$role" = "queue" ]; then
     echo "Running the queue..."
