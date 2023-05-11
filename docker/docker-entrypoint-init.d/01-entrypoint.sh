@@ -15,8 +15,6 @@ fi
 if [ "$role" = "app" ]; then
     echo "Running openswoole..."
     # Run only once
-    composer install --no-dev --no-interaction --optimize-autoloader
-    php artisan key:generate
 
     # Run the application in the background to avoid blocking bitnami execution.
     nohup php artisan octane:start --host=0.0.0.0 --server=swoole --port=8089 &
