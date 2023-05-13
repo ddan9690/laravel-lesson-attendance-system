@@ -1,7 +1,7 @@
 @extends('remedial.layouts.master')
 @section('title', 'Attendance')
 @section('content')
-    <div class="col-md-10 mx-auto">
+    <div class="col-12 mx-auto">
         <div class="card">
             @can('admin')
                 <h5 class="card-header"><span><a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Add
@@ -30,9 +30,9 @@
                     </thead>
                     <tbody class="table-border-bottom-0">
                         @php $sl=0 @endphp
-                        @foreach ($users as $user)
+                        @foreach ($users as  $user)
                             <tr>
-                                <td>{{ ++$sl }}</td>
+                                <td>{{ $users->firstItem() + $loop->index }}</td>
                                 <td>{{ $user->name }}</td>
                                 <td>{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
@@ -62,7 +62,10 @@
 
                     </tbody>
                 </table>
-                {{ $users->links() }}
+               
+                    {!! $users->links() !!}
+                
+       
             </div>
         </div>
     </div>

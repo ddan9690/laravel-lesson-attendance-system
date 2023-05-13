@@ -19,11 +19,13 @@ use App\Http\Controllers\AttendanceController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('login');
+    
 });
 
 Route::get('/remedial', function () {
     return view('remedial.index');
+    
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 

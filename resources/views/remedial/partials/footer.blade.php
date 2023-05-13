@@ -6,8 +6,8 @@
       <script>
         document.write(new Date().getFullYear());
       </script>
-      , made with ❤️ by
-      <a href="#" target="_blank" class="footer-link fw-bolder">Jamadata (0711317235)</a>
+      
+      <a href="#" target="_blank" class="footer-link fw-bolder">Jamadata </a>
     </div>
    
   </div>

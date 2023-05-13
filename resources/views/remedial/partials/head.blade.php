@@ -47,7 +47,7 @@
 
 <link rel="stylesheet" href="{{ asset('remedialsystem/assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
-
+<link rel="stylesheet" href="{{ asset('remedialsystem/assets/css/pagination.css') }}">
 <!-- Page CSS -->
 <!-- Select2 CSS -->
 

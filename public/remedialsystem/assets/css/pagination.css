@@ -1,0 +1,9 @@
+.pagination-wrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .pagination .page-link {
+    font-size: 14px;
+    padding: 0.375rem 0.5rem;
+  }  
