@@ -18,9 +18,9 @@
     <title>Remedial</title>
 
     <meta name="description" content="" />
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" />
+
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -31,8 +31,7 @@
     />
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
 
    <!-- Icons. Uncomment required icon fonts -->
 <link rel="stylesheet" href="{{ asset('remedialsystem/assets/vendor/fonts/boxicons.css') }}" />
@@ -58,11 +57,5 @@
 <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
 <script src="{{ asset('remedialsystem/assets/js/config.js') }}"></script>
 
- <script>
-    $(document).ready(function() {
-     
-      $('.selectteacher').select2({});
-      $('.selectclass').select2();
-    });
-  </script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.2/sweetalert.min.js" integrity="sha512-AA1Bzp5Q0K1KanKKmvN/4d3IRKVlv9PYgwFPvm32nPO6QS8yH1HO7LbgB1pgiOxPtfeg5zEn2ba64MUcqJx6CA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>

@@ -1,5 +1,5 @@
 @include('remedial.partials.head')
-
+@include('sweetalert::alert')
   <body>
     <!-- Layout wrapper -->
     <div class="layout-wrapper layout-content-navbar">
@@ -7,7 +7,7 @@
         <!-- Menu -->
     @include('remedial.partials.sidebar')
 
-      
+
         <!-- / Menu -->
 
         <!-- Layout container -->
@@ -26,15 +26,15 @@
 
 
               <div class="row">
-                
+
               @yield('content')
-              
+
               </div>
-             
+
             </div>
 
           </div>
             <!-- / Content -->
 
     @include('remedial.partials.footer')
-           
+    @yield('scripts')

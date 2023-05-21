@@ -9,6 +9,8 @@ use App\Models\Lesson;
 use App\Models\Subject;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
+Use Alert;
+
 
 class AttendanceController extends Controller
 {
@@ -34,29 +36,29 @@ class AttendanceController extends Controller
     }
 
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'teacher' => ['required', 'integer'],
-            'class' => ['required', 'integer'],
-            'lesson' => ['required', 'integer'],
-            'week' => ['required', 'integer'],
-        ]);
+{
+    $validated = $request->validate([
+        'teacher' => ['required', 'integer'],
+        'class' => ['required', 'integer'],
+        'lesson' => ['required', 'integer'],
+        'week' => ['required', 'integer'],
+        'subject' => ['required', 'integer'],
+    ]);
 
-        $attendance = new Attendance;
-        $attendance->user_id = $request->teacher;
-        $attendance->form_id = $request->class;
-        $attendance->lesson_id = $request->lesson;
-        $attendance->week_id = $request->week;
-        $attendance->subject_id = $request->subject;
+    $attendance = new Attendance;
+    $attendance->user_id = $request->teacher;
+    $attendance->form_id = $request->class;
+    $attendance->lesson_id = $request->lesson;
+    $attendance->week_id = $request->week;
+    $attendance->subject_id = $request->subject;
+    $attendance->status = $request->has('status') ? 'make-up' : '';
 
-        if ($request->has('status')) {
-            $attendance->status = 'make-up';
-        }
+    $attendance->save();
 
-        $attendance->save();
+    // Return JSON response
+    return response()->json(['success' => true, 'message' => 'Record created successfully.']);
+}
 
-        return back()->with('success', 'Attendance added successfully.');
-    }
 
 
     public function show($id)

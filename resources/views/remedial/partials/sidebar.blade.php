@@ -45,9 +45,9 @@
         </a>
       </li>
 
-     
 
-    
+
+
      <li class="menu-item ">
       <a href="{{route('users.index')}}" class="menu-link">
         {{-- <i class="menu-icon tf-icons bx bx-home-circle"></i> --}}
@@ -55,9 +55,18 @@
         <div data-i18n="Analytics">Teachers</div>
       </a>
     </li>
+
+     <li class="menu-item ">
+      <a href="{{route('forms.index')}}" class="menu-link">
+
+        <i class='menu-icon tf-icons bx bxs-building-house'></i>
+
+        <div data-i18n="Analytics">Classes</div>
+      </a>
+    </li>
      @endcan
 
-     
+
       <li class="menu-item ">
         <a href="{{route('comment.index')}}" class="menu-link">
           {{-- <i class="menu-icon tf-icons bx bx-home-circle"></i> --}}
@@ -66,11 +75,10 @@
         </a>
       </li>
 
-    
 
-     
-     
-      
+
+
+
+
     </ul>
   </aside>
-  

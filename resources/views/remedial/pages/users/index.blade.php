@@ -23,6 +23,7 @@
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Code</th>
+
                             @can('super')
                                 <th>Action</th>
                             @endcan
@@ -30,7 +31,7 @@
                     </thead>
                     <tbody class="table-border-bottom-0">
                         @php $sl=0 @endphp
-                        @foreach ($users as  $user)
+                        @foreach ($users as $user)
                             <tr>
                                 <td>{{ $users->firstItem() + $loop->index }}</td>
                                 <td>{{ $user->name }}</td>
@@ -43,6 +44,8 @@
                                         -
                                     @endif
                                 </td>
+
+
                                 @can('super')
                                     <td>
                                         <a class="btn btn-primary btn-sm"
@@ -58,14 +61,10 @@
                                 @endcan
                             </tr>
                         @endforeach
-
-
                     </tbody>
                 </table>
-               
-                    {!! $users->links() !!}
-                
-       
+
+                {!! $users->links() !!}
             </div>
         </div>
     </div>

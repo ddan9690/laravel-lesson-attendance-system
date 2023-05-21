@@ -1,6 +1,9 @@
 @php
-    
+
     $attednaces = DB::table('attendances')->count();
+    $timezone = new DateTimeZone('Africa/Nairobi');
+    $currentDateTime = new DateTime('now', $timezone);
+    $currentDateTimeFormatted = $currentDateTime->format('d/m/y h:i a');
 @endphp
 
 
@@ -49,6 +52,12 @@
             margin-bottom: 10px;
         }
 
+        h4, p {
+        margin: 0;
+        padding: 0;
+        line-height: 1;
+    }
+
         table th:first-child,
         table td:first-child {
             width: 5%;
@@ -68,7 +77,7 @@
 
 <body>
     <h4>MOI NYABOHANSE GIRLS HIGH SCHOOL</h4>
-    <p>TERM 2-2023 REMEDIAL ATTENDANCE RECORDS</p>
+    <p> REMEDIAL ATTENDANCE RECORDS</p>
     <table>
         <thead>
             <tr>
@@ -91,6 +100,7 @@
             </tr>
         </tbody>
     </table>
+    <p style="font-weight: bold; font-style: italic; font-size: small;">Records as at <?= $currentDateTimeFormatted ?></p>
 </body>
 
 </html>

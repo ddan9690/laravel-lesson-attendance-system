@@ -18,6 +18,7 @@ class UserController extends Controller
     {
 
         $users = User::paginate(15);
+
         return view('remedial.pages.users.index', compact('users'));
     }
 
@@ -84,6 +85,7 @@ class UserController extends Controller
     }
 
     $user->password = Hash::make($request->new_password);
+    $user->last_login = now();
     $user->update();
 
     return redirect()->back()->with('success', 'Password changed successfully.');
@@ -116,12 +118,12 @@ public function update(Request $request, User $user)
 
     // $user->update($validatedData);
     $user->update($request->all());
-   
+
 
     return redirect()->route('users.index')->with('message', 'User updated successfully.');
 }
 
-    
+
     public function mylessons()
     {
         // Get the authenticated user

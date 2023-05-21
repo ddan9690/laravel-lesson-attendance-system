@@ -6,10 +6,10 @@
       <script>
         document.write(new Date().getFullYear());
       </script>
-      
+
       <a href="#" target="_blank" class="footer-link fw-bolder">Jamadata </a>
     </div>
-   
+
   </div>
 </footer>
 <!-- / Footer -->
@@ -26,6 +26,7 @@
 </div>
 <!-- / Layout wrapper -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 
 <!-- Core JS -->
@@ -51,3 +52,4 @@
 <!-- Place this tag in your head or just before your close body tag. -->
 <script async defer src="https://buttons.github.io/buttons.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+

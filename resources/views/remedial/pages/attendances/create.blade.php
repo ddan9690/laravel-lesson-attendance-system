@@ -15,11 +15,12 @@
 
                     <div class="card-body">
 
-                        <form action="{{ route('attendance.store') }}" method="POST">
+                        <form id="create_attendance">
                             @csrf
                             <div>
                                 <label for="smallSelect" class="form-label">Teacher</label>
-                                <select id="selectteacher" name="teacher" required class="form-select selectteacher form-select-sm" >
+                                <select id="selectteacher" name="teacher" required
+                                    class="form-select selectteacher form-select-sm">
                                     <option>Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -106,8 +107,44 @@
             </div>
         </div>
     </div>
-
-    
 @endsection
 
+@section('scripts')
+    <script>
+        $(document).ready(function() {
 
+            $('.selectteacher').select2({});
+            $('.selectclass').select2();
+
+            var form = $("#create_attendance");
+            form.on("submit", function(event) {
+                event.preventDefault();
+                var data = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('attendance.store') }}",
+                    type: "POST",
+                    data: data,
+                    success: function(response) {
+                        if (response.success) {
+                            swal({
+                                title: "Success!",
+                                text: response.message,
+                                type: "success",
+                                showConfirmButton: false
+                            }).then(function() {
+                                form.trigger('reset');
+                            });
+                        } else {
+                            // Display an error message
+                            alert(response.message);
+                        }
+                    },
+                    error: function(error) {
+                        // Handle the error response
+                        console.log(error);
+                    }
+                })
+            })
+        });
+    </script>
+@endsection

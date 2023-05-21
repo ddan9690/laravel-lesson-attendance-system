@@ -17,7 +17,7 @@
                             @can('admin')
                             <th>Action</th>
                           @endcan
-                           
+
                         </tr>
                     </thead>
                     <tbody>
@@ -33,7 +33,7 @@
                                     <td>{{ $attendance->subject->name }}</td>
                                     <td>{{ $attendance->lesson->name }}</td>
                                     <td>
-                                        @if ($attendance->status === null)
+                                        @if ($attendance->status === '')
                                             <i class="bx bxs-check-circle menu-icon tf-icons bx-sm text-success"></i>
                                         @else
                                             {{ $attendance->status }}
@@ -42,7 +42,7 @@
 
                                     @can('admin')
                                     <td>
-                                       
+
                                         <form method="POST" action="{{ route('attendance.delete', ['id' => $attendance->id]) }}">
                                             @csrf
                                             @method('DELETE')
@@ -51,7 +51,7 @@
 
                                     </td>
                                     @endcan
-                                   
+
                                 </tr>
                             @endforeach
                         @endif

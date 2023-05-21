@@ -8,7 +8,8 @@
             <img class="ms-auto" src="{{ asset('remedialsystem/assets/img/nyabologo.png') }}" alt="Moi Nyabohanse">
         </div>
 </div>
-    
-    
+
+
   </div>
 @endsection
+

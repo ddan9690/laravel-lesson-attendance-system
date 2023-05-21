@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminPDFExport;
+use App\Http\Controllers\FormController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
@@ -20,12 +21,12 @@ use App\Http\Controllers\AttendanceController;
 
 Route::get('/', function () {
     return redirect()->route('login');
-    
+
 });
 
 Route::get('/remedial', function () {
     return view('remedial.index');
-    
+
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -52,7 +53,13 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::get('/remedial/attendance/{week}/{user_id}/show', [AttendanceController::class, 'userweekly'])->name('user.attendances.viewweekly');
     Route::delete('/remedial/attendance/{id}/delete', [AttendanceController::class, 'destroy'])->name('attendance.delete');
 
-   
+    // forms
+    Route::get('/remedial/forms', [FormController::class, 'index'])->name('forms.index');
+    Route::get('/remedial/form/create', [FormController::class, 'create'])->name('form.create');
+    Route::post('/remedial/form/store', [FormController::class, 'store'])->name('form.store');
+    Route::patch('/remedial/form/{id}', [FormController::class, 'store'])->name('form.update');
+    Route::delete('/remedial/form/{id}/delete', [FormController::class, 'destroy'])->name('form.destroy');
+
 
 
 

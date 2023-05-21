@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Form;
 use App\Models\Lesson;
+
 use App\Models\Attendance;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Notifications\Notifiable;
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'code',
         'password',
         'role',
+        'last_login',
     ];
 
     /**
@@ -48,15 +50,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function attendances(){
+    public function attendances()
+    {
         return $this->hasMany(Attendance::class);
     }
 
-    public function form(){
+    public function form()
+    {
         return $this->hasMany(Form::class);
     }
 
-    public function lessons(){
+    public function lessons()
+    {
         return $this->hasMany(Lesson::class);
     }
+
+
 }
