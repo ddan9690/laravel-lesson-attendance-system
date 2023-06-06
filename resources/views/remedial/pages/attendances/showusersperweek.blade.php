@@ -6,7 +6,7 @@
         <h5 class="card-header">{{ $user->name }}'s Attendance for Week {{ $week->week_number }}</h5>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -28,7 +28,7 @@
                         @else
                             @foreach ($attendances as $attendance)
                                 <tr>
-                                    <td style="white-space: nowrap">{{ date('D d-m-Y', strtotime($attendance->created_at)) }}</td>
+                                    <td style="white-space: nowrap">{{ date('D d/m/y', strtotime($attendance->created_at)) }}</td>
                                     <td style="white-space: nowrap">{{ $attendance->form->name }}</td>
                                     <td>{{ $attendance->subject->name }}</td>
                                     <td>{{ $attendance->lesson->name }}</td>

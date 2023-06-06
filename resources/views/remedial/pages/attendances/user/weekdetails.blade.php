@@ -7,7 +7,7 @@
             <h5 class="card-header"> <strong>Week {{ $week->week_number }}</strong></h5>
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped table-sm">
                         <thead>
                             <tr>
                                 <th>Date</th>
@@ -15,7 +15,7 @@
                                 <th>Subject</th>
                                 <th>Lesson</th>
                                 <th>Status</th>
-                               
+
                             </tr>
                         </thead>
                         <tbody>
@@ -26,7 +26,7 @@
                             @else
                                 @foreach ($attendances as $attendance)
                                     <tr>
-                                        <td style="white-space: nowrap">{{ date('D d-m-Y', strtotime($attendance->created_at)) }}</td>
+                                        <td style="white-space: nowrap">{{ date('D d/m/y', strtotime($attendance->created_at)) }}</td>
                                         <td style="white-space: nowrap">{{ $attendance->form->name }}</td>
                                         <td>{{ $attendance->subject->name }}</td>
                                         <td>{{ $attendance->lesson->name }}</td>
@@ -37,13 +37,7 @@
                                                 {{ $attendance->status }}
                                             @endif
                                         </td>
-                                        {{-- <td>
-                                            <form method="POST" action="{{ route('attendance.delete', ['id' => $attendance->id]) }}">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this attendance?')">Delete</button>
-                                            </form>
-                                        </td> --}}
+
                                     </tr>
                                 @endforeach
                             @endif

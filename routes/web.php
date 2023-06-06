@@ -4,29 +4,19 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AdminPDFExport;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\WeeksController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AttendanceController;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "web" middleware group. Make something great!
-|
-*/
+
 
 Route::get('/', function () {
     return redirect()->route('login');
-
 });
 
 Route::get('/remedial', function () {
     return view('remedial.index');
-
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
@@ -50,21 +40,42 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::get('/remedial/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/remedial/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/remedial/attendance/{user_id}/show', [AttendanceController::class, 'show'])->name('attendance.show');
+
+
+    Route::get('/remedial/classrecords', [AttendanceController::class, 'forms'])->name('attendance.classrecords');
+    // Route::get('/remedial/classrecords/{id}/attendance/show', [FormController::class, 'classrecords'])->name('form.attendance.show');
+    Route::get('/remedial/classrecords/{id}/attendance/show', [FormController::class, 'showAttendance'])->name('form.attendance.show');
+    Route::get('/remedial/classrecords/{id}/attendance/week/{week_id}', [FormController::class, 'showAttendanceWeek'])->name('form.attendance.week');
+
+
+
+
+
     Route::get('/remedial/attendance/{week}/{user_id}/show', [AttendanceController::class, 'userweekly'])->name('user.attendances.viewweekly');
     Route::delete('/remedial/attendance/{id}/delete', [AttendanceController::class, 'destroy'])->name('attendance.delete');
+    Route::post('attendance/deleteAll', [AttendanceController::class, 'deleteAll'])->name('attendance.deleteAll');
 
-    // forms
+
+    // forms/classes
     Route::get('/remedial/forms', [FormController::class, 'index'])->name('forms.index');
     Route::get('/remedial/form/create', [FormController::class, 'create'])->name('form.create');
     Route::post('/remedial/form/store', [FormController::class, 'store'])->name('form.store');
-    Route::patch('/remedial/form/{id}', [FormController::class, 'store'])->name('form.update');
-    Route::delete('/remedial/form/{id}/delete', [FormController::class, 'destroy'])->name('form.destroy');
+    Route::get('/remedial/form/{id}/edit', [FormController::class, 'edit'])->name('form.edit');
+    Route::patch('/remedial/form/{id}', [FormController::class, 'update'])->name('form.update');
+    Route::delete('/remedial/form/delete/{id}', [FormController::class, 'destroy'])->name('form.destroy');
 
 
+
+    // weeks
+    Route::get('/remedial/weeks', [WeeksController::class, 'index'])->name('weeks.index');
+    Route::get('/remedial/weeks/create', [WeeksController::class, 'create'])->name('week.create');
+    Route::post('/remedial/weeks/store', [WeeksController::class, 'store'])->name('week.store');
+    Route::delete('/remedial/weeks/{week}', [WeeksController::class, 'destroy'])->name('week.destroy');
 
 
 
     Route::get('/remedial/attendance/download', [AdminPDFExport::class, 'AllLessonCountExport'])->name('pdfexport');
+    Route::get('/remedial/attendance/download/report', [AdminPDFExport::class, 'WeeklyAttendanceReportExport'])->name('finalreport');
 });
 
 Route::middleware(['auth'])->group(function () {

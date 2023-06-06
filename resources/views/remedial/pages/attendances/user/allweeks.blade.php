@@ -4,10 +4,10 @@
 <div class="col-md-6 mx-auto">
     <div class="card">
         <h5 class="card-header">{{ auth()->user()->name }}: <span><strong>Total-{{ auth()->user()->attendances->count() }}</strong></span></h5>
-    
+
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped">
+                <table class="table table-striped table-sm">
                     <thead>
                         <tr>
                             <th>Week</th>
@@ -18,10 +18,10 @@
                     <tbody>
                         @foreach ($weeks as $week)
                             <tr>
-                                <td>{{ $week->week_number }}</td>
+                                <td>Week {{ $week->week_number }}</td>
                                 <td>{{ auth()->user()->attendances->where('week_id', $week->id)->count() }}</td>
                                 <td>
-                                    <a href="{{ route('user.viewweekly', ['week' => $week->week_number, 'user_id' => auth()->user()->id]) }}">View</a>
+                                    <a href="{{ route('user.viewweekly', ['week' => $week->week_number, 'user_id' => auth()->user()->id]) }}" class="btn btn-sm btn-info">Click to View</a>
                                 </td>
                             </tr>
                         @endforeach

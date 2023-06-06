@@ -17,8 +17,9 @@
             border: 1px solid #b3adad;
             border-collapse: collapse;
             padding: 5px;
-            width: 70%;
-            margin: 0 auto
+            width: 60%;
+            margin: 0 auto;
+
         }
 
         table th {
@@ -63,7 +64,7 @@
             width: 5%;
         }
 
-        table th:nth-child(2),
+        /* table th:nth-child(2),
         table td:nth-child(2) {
             width: 50%;
         }
@@ -71,7 +72,7 @@
         table th:last-child,
         table td:last-child {
             width: 30%;
-        }
+        } */
     </style>
 </head>
 

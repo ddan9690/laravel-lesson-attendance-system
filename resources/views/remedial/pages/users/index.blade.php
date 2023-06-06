@@ -5,7 +5,14 @@
         <div class="card">
             @can('admin')
                 <h5 class="card-header"><span><a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Add
-                            New</a></span></h5>
+                            New</a></span>
+                            <span>
+                                <form action="{{ route('attendance.deleteAll') }}" method="POST" class="d-inline">
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete all attendances?')">Delete All Remedial Records!</button>
+                                </form>
+                            </span>
+                        </h5>
             @endcan
 
 

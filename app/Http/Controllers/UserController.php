@@ -17,7 +17,8 @@ class UserController extends Controller
     public function index()
     {
 
-        $users = User::paginate(15);
+        $users = User::orderBy('name', 'asc')
+            ->paginate(15);
 
         return view('remedial.pages.users.index', compact('users'));
     }
@@ -66,30 +67,30 @@ class UserController extends Controller
 
     // Store the new password in storage
     public function storepassword(Request $request)
-{
-    $user = Auth::user();
+    {
+        $user = Auth::user();
 
-    $request->validate([
-        'current_password' => 'required',
-        'new_password' => 'required|string|min:8|different:current_password|confirmed',
-        'code' => 'required|string|size:4',
-    ]);
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|different:current_password|confirmed',
+            'code' => 'required|string',
+        ]);
 
-    if (!Hash::check($request->current_password, $user->password)) {
-        return redirect()->back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        if (!Hash::check($request->current_password, $user->password)) {
+            return redirect()->back()->withErrors(['current_password' => 'The current password is incorrect.']);
+        }
+
+        $userCode = $user->code;
+        if ($request->code !== $userCode) {
+            return redirect()->back()->withErrors(['code' => 'The code entered is incorrect.']);
+        }
+
+        $user->password = Hash::make($request->new_password);
+        $user->last_login = now();
+        $user->update();
+
+        return redirect()->back()->with('success', 'Password changed successfully.');
     }
-
-    $userCode = $user->code;
-    if ($request->code !== $userCode) {
-        return redirect()->back()->withErrors(['code' => 'The code entered is incorrect.']);
-    }
-
-    $user->password = Hash::make($request->new_password);
-    $user->last_login = now();
-    $user->update();
-
-    return redirect()->back()->with('success', 'Password changed successfully.');
-}
 
 
     public function destroy(User $user)
@@ -103,25 +104,25 @@ class UserController extends Controller
     }
 
     public function edit(User $user)
-{
-    return view('remedial.pages.users.edit', compact('user'));
-}
+    {
+        return view('remedial.pages.users.edit', compact('user'));
+    }
 
-public function update(Request $request, User $user)
-{
-    $validatedData = $request->validate([
-        'name' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email,' . $user->id,
-        'phone' => ['required', 'regex:/^07\d{8}$/'],
-        'role' => 'required|in:user,admin,super',
-    ]);
+    public function update(Request $request, User $user)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'phone' => ['required', 'regex:/^07\d{8}$/'],
+            'role' => 'required|in:user,admin,super',
+        ]);
 
-    // $user->update($validatedData);
-    $user->update($request->all());
+        // $user->update($validatedData);
+        $user->update($request->all());
 
 
-    return redirect()->route('users.index')->with('message', 'User updated successfully.');
-}
+        return redirect()->route('users.index')->with('message', 'User updated successfully.');
+    }
 
 
     public function mylessons()

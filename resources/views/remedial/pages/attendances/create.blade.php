@@ -110,41 +110,45 @@
 @endsection
 
 @section('scripts')
-    <script>
-        $(document).ready(function() {
+<script>
+    $(document).ready(function() {
 
-            $('.selectteacher').select2({});
-            $('.selectclass').select2();
+        $('.selectteacher').select2({});
+        $('.selectclass').select2();
 
-            var form = $("#create_attendance");
-            form.on("submit", function(event) {
-                event.preventDefault();
-                var data = $(this).serialize();
-                $.ajax({
-                    url: "{{ route('attendance.store') }}",
-                    type: "POST",
-                    data: data,
-                    success: function(response) {
-                        if (response.success) {
-                            swal({
-                                title: "Success!",
-                                text: response.message,
-                                type: "success",
-                                showConfirmButton: false
-                            }).then(function() {
-                                form.trigger('reset');
-                            });
-                        } else {
-                            // Display an error message
-                            alert(response.message);
-                        }
-                    },
-                    error: function(error) {
-                        // Handle the error response
-                        console.log(error);
+        var form = $("#create_attendance");
+        form.on("submit", function(event) {
+            event.preventDefault();
+            var data = $(this).serialize();
+            $.ajax({
+                url: "{{ route('attendance.store') }}",
+                type: "POST",
+                data: data,
+                success: function(response) {
+                    if (response.success) {
+                        swal({
+                            title: "Success!",
+                            text: response.message,
+                            type: "success",
+                            showConfirmButton: false
+                        }).then(function() {
+                            form.trigger('reset');
+                        });
+                    } else {
+                        swal({
+                            title: "Warning!",
+                            text: response.message,
+                            type: "warning",
+                            showConfirmButton: false
+                        });
                     }
-                })
+                },
+                error: function(error) {
+                    // Handle the error response
+                    console.log(error);
+                }
             })
-        });
-    </script>
+        })
+    });
+</script>
 @endsection

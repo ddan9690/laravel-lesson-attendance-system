@@ -20,11 +20,19 @@
 
      @can('admin')
      <li class="menu-item ">
-      <a href="{{route('attendance.create')}}" class="menu-link">
-        {{-- <i class="menu-icon tf-icons bx bx-home-circle"></i> --}}
-        <i class='menu-icon tf-icons bx bx-plus-medical'></i>
-        <div data-i18n="Analytics">New Attendance</div>
-      </a>
+        <a href="{{ route('attendance.create') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-plus-circle"></i>
+            <div data-i18n="Analytics">New Attendance</div>
+        </a>
+
+    </li>
+
+     <li class="menu-item ">
+        <a href="{{ route('attendance.classrecords') }}" class="menu-link">
+            <i class="menu-icon tf-icons bx bx-list-check"></i>
+            <div data-i18n="Analytics">Class Records</div>
+        </a>
+
     </li>
      @endcan
 
@@ -41,7 +49,7 @@
         <a href="{{route('attendance.index')}}" class="menu-link">
           {{-- <i class="menu-icon tf-icons bx bx-home-circle"></i> --}}
           <i class='menu-icon tf-icons bx bx-label'></i>
-          <div data-i18n="Analytics">View All</div>
+          <div data-i18n="Analytics">Teachers Records</div>
         </a>
       </li>
 
@@ -62,6 +70,15 @@
         <i class='menu-icon tf-icons bx bxs-building-house'></i>
 
         <div data-i18n="Analytics">Classes</div>
+      </a>
+    </li>
+
+     <li class="menu-item ">
+      <a href="{{route('weeks.index')}}" class="menu-link">
+
+        <i class='menu-icon tf-icons bx bxs-calendar'></i>
+
+        <div data-i18n="Analytics">Weeks</div>
       </a>
     </li>
      @endcan
