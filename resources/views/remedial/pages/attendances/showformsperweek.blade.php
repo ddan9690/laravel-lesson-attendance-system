@@ -10,17 +10,15 @@
                 <thead>
                     <tr>
                         <th style="width: 5%;">Week</th>
-                        <th style="width: 10%;"> Lessons</th>
-                        <th style="width: 10%;">Action</th>
+                        <th style="width: 10%;">Lessons</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
                     @foreach ($weeks as $week)
-                    <tr>
-                        <td style="width: 5%;">Week {{ $week->week_number }}</td>
-                        <td style="width: 10%;">{{ $form->attendances->where('week_id', $week->id)->count() }}</td>
-                        <td style="width: 10%;"><a href="{{ route('form.attendance.week', ['id' => $form->id, 'week_id' => $week->id]) }}">View Details</a></td>
-                    </tr>
+                        <tr onclick="window.location='{{ route('form.attendance.week', ['id' => $form->id, 'week_id' => $week->id]) }}';" style="cursor: pointer;">
+                            <td style="width: 5%;">Week {{ $week->week_number }}</td>
+                            <td style="width: 10%;">{{ $form->attendances->where('week_id', $week->id)->count() }}</td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>

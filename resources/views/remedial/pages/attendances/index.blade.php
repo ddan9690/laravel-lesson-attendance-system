@@ -11,36 +11,27 @@
             <a href="{{ route('finalreport') }}" class="btn btn-info btn-sm">Detailed PDF</a> <!-- Added button -->
         </span>
     </h5>
-
-
     @endcan
 
-        <div class="table-responsive text-nowrap">
-          <table class="table table-striped table-sm">
+    <div class="table-responsive text-nowrap">
+        <table class="table table-striped table-sm">
             <thead>
-              <tr>
-                <th style="width: 5px;">#</th>
-                <th style="width: 30%;">Teacher</th>
-                <th >Total</th>
-                <th >Action</th>
-
-              </tr>
+                <tr>
+                    <th style="width: 5px;">#</th>
+                    <th style="width: 30%;">Teacher</th>
+                    <th>Total</th>
+                </tr>
             </thead>
             <tbody class="table-border-bottom-0">
-
                 @foreach ($users as $user)
-                <tr>
+                <tr onclick="window.location='{{ route('attendance.show', $user->id) }}';" style="cursor: pointer;">
                     <td>{{$loop->iteration}}</td>
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->attendances->count() }}</td>
-                    <td><a href="{{ route('attendance.show', $user->id) }}" class="btn btn-primary btn-sm">View</a></td>
                 </tr>
-            @endforeach
-
+                @endforeach
             </tbody>
-          </table>
-        </div>
-      </div>
+        </table>
+    </div>
 </div>
 @endsection
-

@@ -2,8 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -54,11 +55,29 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $credentials = $this->only('email', 'password');
+        $remember = $this->filled('remember'); // Check if the "remember" field is filled
 
-        if (!Auth::attempt($credentials, $this->boolean('remember'))) {
+        if (!Auth::attempt($credentials, $remember)) {
             throw ValidationException::withMessages([
                 'email' => __('auth.failed'),
             ])->redirectTo($this->getRedirectUrl());
         }
+
+        if ($remember) {
+            $this->setRememberMeCookie();
+        } else {
+            $this->deleteRememberMeCookie();
+        }
+    }
+
+    private function setRememberMeCookie(): void
+    {
+        $rememberToken = Auth::user()->getRememberToken();
+        Cookie::queue('remember_me', $rememberToken, 43200); // Remember Me cookie for 30 days
+    }
+
+    private function deleteRememberMeCookie(): void
+    {
+        Cookie::queue(Cookie::forget('remember_me'));
     }
 }

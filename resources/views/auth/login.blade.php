@@ -63,55 +63,60 @@
           <!-- Register -->
           <div class="card">
             <div class="card-body">
-            
-            
+
+
 
                 <form id="formAuthentication" class="mb-3" action="{{ route('login') }}" method="POST">
                     @csrf
-                
+
                     <div class="mb-3">
                         <label for="email" class="form-label">Zeraki Email</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Enter your Zeraki email" autofocus />
-                
+                        <input type="email" class="form-control" id="email" value="{{ old('email') }}" name="email" placeholder="Enter your Zeraki email" autofocus />
+
                         @if ($errors->has('email'))
                             <div class="alert alert-danger mt-2" role="alert">
                                 {{ $errors->first('email') }}
                             </div>
                         @endif
                     </div>
-                
+
                     <div class="mb-3 form-password-toggle">
                         <div class="d-flex justify-content-between">
                             <label class="form-label" for="password">Password</label>
                         </div>
-                
+
                         <div class="input-group input-group-merge">
-                            <input type="password" id="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
-                
+                            <input type="password" id="password" value="{{ old('password') }}" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password" />
+
                             <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                         </div>
-                
+
                         @if ($errors->has('password'))
                             <div class="alert alert-danger mt-2" role="alert">
                                 {{ $errors->first('password') }}
                             </div>
                         @endif
                     </div>
-                
+
                     <div class="mb-3">
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="1" name="remember" id="remember" />
-                            <label class="form-check-label" for="remember-me"> Remember Me </label>
+                            @php
+                            $rememberChecked = isset($_COOKIE['remember_me']) ? 'checked' : '';
+                        @endphp
+                            <input class="form-check-input" type="checkbox" value="1" name="remember" id="remember" {{ $rememberChecked }} />
+                            <label class="form-check-label" for="remember"> Remember Me </label>
                         </div>
                     </div>
-                
+
+
+
                     <div class="mb-3">
                         <button class="btn btn-sm btn-primary d-grid w-100" type="submit">Log in</button>
                     </div>
                 </form>
-                
 
-             
+
+
             </div>
           </div>
           <!-- /Register -->
@@ -121,7 +126,7 @@
 
     <!-- / Content -->
 
-    
+
 
     <!-- Core JS -->
     <!-- build:js assets/vendor/js/core.js -->
@@ -129,12 +134,12 @@
     <script src="{{ asset('remedialsystem/assets/vendor/libs/popper/popper.js') }}"></script>
     <script src="{{ asset('remedialsystem/assets/vendor/js/bootstrap.js') }}"></script>
     <script src="{{ asset('remedialsystem/assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
-    
+
     <script src="{{ asset('remedialsystem/assets/vendor/js/menu.js') }}"></script>
-    
+
     <!-- Main JS -->
     <script src="{{ asset('remedialsystem/assets/js/main.js') }}"></script>
-    
+
 
     <!-- Page JS -->
 

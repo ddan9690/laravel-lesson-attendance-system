@@ -16,16 +16,14 @@
                         <th style="width: 5px;">#</th>
                         <th>Form</th>
                         <th>Total</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody class="table-border-bottom-0">
                     @foreach ($forms as $form)
-                    <tr>
+                    <tr onclick="window.location='{{ route('form.attendance.show', $form->id) }}';" style="cursor: pointer;">
                         <td>{{ $loop->iteration }}</td>
                         <td>{{ $form->name }}</td>
                         <td>{{ $form->attendances->count() }}</td>
-                        <td><a href="{{ route('form.attendance.show', $form->id) }}">View</a></td>
                     </tr>
                     @endforeach
                 </tbody>
