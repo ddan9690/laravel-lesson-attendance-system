@@ -22,7 +22,7 @@
                 </div>
             @endif
             <div class="table-responsive text-nowrap">
-                <table class="table">
+                <table class="table table-sm table-bordered table-hover table-striped" id="users-table">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -76,3 +76,16 @@
         </div>
     </div>
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/dataTables.bootstrap4.min.css">
+@endpush
+@push('scripts')
+<script src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.3/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#users-table').DataTable();
+    });
+</script>
+@endpush

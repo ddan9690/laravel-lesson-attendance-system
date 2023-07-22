@@ -4,41 +4,38 @@
 <div class="col-md-10 mx-auto">
     <div class="card">
         <div class="card-header">
-            <div class="d-flex justify-content-between">
-               
-                <div class="d-flex justify-content-center">
-                    @can('admin')
-                    <a href="{{ route('comment.create') }}" class="btn btn-primary btn-sm mx-1">New Comment</a>
-                    @endcan
-                    <form action="{{ route('comment.index') }}" method="get" class="form-inline my-2 my-lg-0">
-                        <span for="Select Week">Select Week</span>
-                        <div class="input-group">
-                            <select name="week" id="week" class="form-control form-control-sm">
-                               
-                                @foreach($weeks as $week)
-                                <option value="{{ $week->id }}" {{ $selectedWeek == $week->id ? 'selected' : '' }}>
-                                    {{ $week->week_number }}</option>
-                                @endforeach
-                            </select>
-                            <div class="input-group-append ms-1">
-                                <button type="submit" class="btn btn-primary btn-sm">View</button>
-                            </div>
+            <div class="d-flex justify-content-start align-items-center">
+                <form action="{{ route('comment.index') }}" method="get" class="form-inline my-2 my-lg-0">
+                    <span for="week">Select Week</span>
+                    <div class="input-group">
+                        <select name="week" id="week" class="form-control form-control-sm">
+                            @foreach($weeks as $week)
+                            <option value="{{ $week->id }}" {{ $selectedWeek == $week->id ? 'selected' : '' }}>
+                                {{ $week->week_number }}
+                            </option>
+                            @endforeach
+                        </select>
+                        <div class="input-group-append ms-1">
+                            <button type="submit" class="btn btn-secondary btn-sm">View</button>
                         </div>
-                    </form>
-                </div>
+                    </div>
+                </form>
+                @can('admin')
+                <a href="{{ route('comment.create') }}" class="btn mt-4 btn-primary btn-sm mx-1">New Comment</a>
+                @endcan
+                <a href="{{ route('exportToPDF') }}" class="btn mt-4  btn-success btn-sm mx-1">Download</a>
             </div>
-            
         </div>
         <div class="table-responsive text-nowrap">
             <table class="table table-striped">
                 <thead>
-                    <tr >
+                    <tr>
                         <th style="font-size: 10px">#</th>
                         <th style="font-size: 10px">Comment</th>
                         <th style="font-size: 10px"></th>
-                       @can('admin')
-                       <th style="font-size: 10px">Actions</th>
-                       @endcan
+                        @can('admin')
+                        <th style="font-size: 10px">Actions</th>
+                        @endcan
                     </tr>
                 </thead>
                 <tbody>
@@ -68,7 +65,6 @@
                         </tr>
                     @endif
                 </tbody>
-                
             </table>
             {{ $comments->links() }}
         </div>

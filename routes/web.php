@@ -93,4 +93,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/remedial/comments/{id}/edit', [CommentController::class, 'edit'])->name('comment.edit');
     Route::put('/remedial/comments/{id}', [CommentController::class, 'update'])->name('comment.update');
     Route::delete('/remedial/comments/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
+    Route::get('/remedial/comments/export-pdf', [CommentController::class, 'exportToPDF'])->name('exportToPDF');
+
 });

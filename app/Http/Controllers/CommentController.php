@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Week;
 
 use App\Models\Comment;
+
 use Illuminate\Http\Request;
+use Barryvdh\DomPDF\Facade\Pdf;
+
+
 
 class CommentController extends Controller
 {
@@ -35,7 +39,7 @@ class CommentController extends Controller
         $weeks = Week::all();
         return view('remedial.pages.comments.create', compact('weeks'));
     }
-    
+
     public function store(Request $request)
     {
         $validatedData = $request->validate([
@@ -90,5 +94,28 @@ public function destroy($id)
 
     return redirect()->route('comment.index')->with('success', 'Comment deleted successfully.');
 }
+
+public function exportToPDF()
+    {
+        // Get the comments, including the related week, and order them by week_number
+        $comments = Comment::with('week')->orderBy('week_id', 'asc')->get();
+
+
+        // Group the comments by week_number using Laravel collection's groupBy method
+        $groupedComments = $comments->groupBy('week.week_number');
+
+        // Pass the grouped comments to the view
+        $data = [
+            'groupedComments' => $groupedComments,
+        ];
+
+        // Load the view using the Blade file
+        $pdf = PDF::loadView('remedial.pages.comments.pdfexport', $data);
+
+        // Return the PDF as a response for streaming
+        return $pdf->stream('remedial_notices.pdf');
+    }
+
+
 
 }

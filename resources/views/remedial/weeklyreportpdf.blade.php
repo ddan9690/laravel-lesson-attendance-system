@@ -1,10 +1,3 @@
-@php
-    $attendances = DB::table('attendances')->count();
-    $timezone = new DateTimeZone('Africa/Nairobi');
-    $currentDateTime = new DateTime('now', $timezone);
-    $currentDateTimeFormatted = $currentDateTime->format('d/m/y h:i a');
-@endphp
-
 <!DOCTYPE html>
 <html>
 
@@ -37,7 +30,7 @@
             /* reduce the font size */
         }
 
-        h4 {
+        h5 {
             text-align: center;
             margin: 0 auto;
             font-size: 20px;
@@ -46,7 +39,7 @@
 
         p {
             text-align: center;
-            font-size: 16px;
+            font-size: 14px;
             margin-bottom: 10px;
         }
 
@@ -54,7 +47,7 @@
             font-size: 10px; /* Updated font size for WK labels */
         }
 
-        h4,
+        h5,
         p {
             margin: 0;
             padding: 0;
@@ -66,26 +59,28 @@
             width: 3%;
         }
 
-
-
         .week-label {
-            font-size: 11pxpx; /* Updated font size for column heads */
+            font-size: 11px; /* Updated font size for column heads */
         }
 
-        .normal-column {
-            border-left: 2px solid #080808; /* Thick left border for Normal column */
-        }
-        table td:nth-last-child(3),
-        table td:nth-last-child(2),
         table td:last-child {
-            font-weight: bold;
+            font-weight: bold; /* Updated style for the last column (Total) */
+        }
+        .logo {
+            display: block;
+            width: 60px; /* Adjust the width of the logo as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin: 0 auto 10px; /* Center the logo and add some margin at the bottom */
         }
     </style>
 </head>
 
 <body>
 
-    <h4>MOI NYABOHANSE GIRLS HIGH SCHOOL</h4>
+    <div style="text-align: center;">
+        <img src="{{ public_path('remedialsystem/assets/img/logo.png') }}" alt="Logo" class="logo">
+    </div>
+    <h5>MOI NYABOHANSE GIRLS HIGH SCHOOL</h5>
     <p>WEEKLY ATTENDANCE RECORDS</p>
     <table>
         <thead>
@@ -95,9 +90,7 @@
                 @foreach ($weeks as $week)
                     <th class="week-label">WK {{ $week->week_number }}</th>
                 @endforeach
-                <th class="week-label ">Normal</th>
-                <th nowrap class="week-label">Mk-Ups</th>
-                <th class="week-label">Total</th>
+                <th class="week-label">TOTAL</th>
             </tr>
         </thead>
         <tbody>
@@ -113,25 +106,18 @@
                     @endphp
                     @foreach ($weeks as $week)
                         @php
-                            $taughtCount = $user->attendances->where('week_id', $week->id)->where('status', '')->count();
-                            $makeUpCount = $user->attendances->where('week_id', $week->id)->where('status', 'make-up')->count();
+                            $taughtCount = $user->attendances->where('week_id', $week->id)->count();
                             $userTotal += $taughtCount;
                             $columnTotals[$week->id] = ($columnTotals[$week->id] ?? 0) + $taughtCount;
                         @endphp
                         <td style="text-align: center">{{ $taughtCount }}</td>
                     @endforeach
                     <td style="text-align: center">{{ $userTotal }}</td>
-                    <td style="text-align: center">{{ $user->attendances->where('status', 'make-up')->count() }}</td>
-                    <td style="text-align: center">{{ $user->attendances->count() }}</td>
                 </tr>
             @endforeach
         </tbody>
 
     </table>
-
-
-
-
 
 </body>
 
