@@ -83,7 +83,7 @@
                                 <select id="smallSelect" name="week" class="form-select form-select-sm">
                                     <option>Select Week</option>
                                     @foreach ($weeks as $week)
-                                        <option value="{{ $week->id }}">{{ $week->week_number }}</option>
+                                        <option value="{{ $week->id }}">Week {{ $week->week_number }}</option>
                                     @endforeach
                                 </select>
                                 @error('week')
@@ -115,7 +115,8 @@
 <script>
     $(document).ready(function() {
 
-        // Your existing code ...
+        $('.selectteacher').select2();
+        $('.selectclass').select2();
 
         var form = $("#create_attendance");
         var submitBtn = form.find("button[type=submit]"); // Get the submit button
