@@ -90,7 +90,7 @@
                 @foreach ($weeks as $week)
                     <th class="week-label">WK {{ $week->week_number }}</th>
                 @endforeach
-                <th class="week-label">TOTAL</th>
+                <th class="week-label">Total</th>
             </tr>
         </thead>
         <tbody>

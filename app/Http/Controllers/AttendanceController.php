@@ -21,11 +21,8 @@ class AttendanceController extends Controller
             ->orderBy('name', 'asc')
             ->get();
 
-        return view('remedial.pages.attendances.index', [
-            'users' => $users,
-        ]);
+        return view('remedial.pages.attendances.index', ['users' => $users]);
     }
-
 
     public function create()
     {
@@ -48,19 +45,66 @@ class AttendanceController extends Controller
             'subject' => ['required', 'integer'],
         ]);
 
-        // Get the form, subject, and week based on the request data
+        // Check restrictions
+        $response = $this->checkRestrictions($request);
+        if (!$response['success']) {
+            return response()->json($response);
+        }
+
+        // Create the attendance record
+        $attendance = new Attendance;
+        $attendance->user_id = $request->input('teacher');
+        $attendance->form_id = $request->input('class');
+        $attendance->lesson_id = $request->input('lesson');
+        $attendance->week_id = $request->input('week');
+        $attendance->subject_id = $request->input('subject');
+        $attendance->status = $request->has('status') ? 'make-up' : '';
+        $attendance->save();
+
+        return response()->json(['success' => true, 'message' => 'Record created successfully.']);
+    }
+
+
+
+
+
+    private function checkRestrictions(Request $request)
+    {
         $formId = $request->input('class');
         $subjectId = $request->input('subject');
         $weekId = $request->input('week');
-        $teacherId = $request->input('teacher');
 
+        // Define restricted classes and subjects for Form 1
+        $restrictedClassesForForm1 = [
+            '1 Diamond', '1 Emerald', '1 Topaz', '1 Gold', '1 Sapphire', '1 Pearl','Form 1'
+        ];
+
+        $restrictedSubjectsForForm1 = [
+            'English', 'Kiswahili', 'Biology', 'Mathematics', 'CRE', 'Chemistry', 'History', 'Geography', 'Physics',
+        ];
+
+        // Check for restriction on Form 1 and specific subjects
+        if (in_array(Form::find($formId)->name, $restrictedClassesForForm1) && in_array(Subject::find($subjectId)->name, $restrictedSubjectsForForm1)) {
+            $attendanceCount = Attendance::where('form_id', $formId)
+                ->where('subject_id', $subjectId)
+                ->where('week_id', $weekId)
+                ->count();
+
+            if ($attendanceCount >= 1) {
+                return ['success' => false, 'message' => 'Form 1 can have a maximum of 1 remedial for this subject in the selected week.'];
+            }
+        }
+
+        // Check other restrictions for different forms and subjects
         $restrictedForms = [
             '2 Diamond', '2 Emerald', '2 Topaz', '2 Gold', '2 Sapphire', '2 Pearl',
             '3 Diamond', '3 Topaz', '3 Gold', '3 Sapphire', '3 Pearl',
             '4 East', '4 West', '4 Sapphire', '4 North'
         ];
+
+        $restrictedSubjects = ['English', 'Chemistry', 'Biology', 'Mathematics'];
+
         if (in_array(Form::find($formId)->name, $restrictedForms)) {
-            $restrictedSubjects = ['English', 'Chemistry', 'Biology', 'Mathematics'];
             if (in_array(Subject::find($subjectId)->name, $restrictedSubjects)) {
                 $attendanceCount = Attendance::where('form_id', $formId)
                     ->where('subject_id', $subjectId)
@@ -68,44 +112,21 @@ class AttendanceController extends Controller
                     ->count();
 
                 if ($attendanceCount >= 2) {
-                    return response()->json(['success' => false, 'message' => 'This class can have a maximum of 2 remedials for this subject in the selected week.']);
+                    return ['success' => false, 'message' => 'This class can have a maximum of 2 remedials for this subject in the selected week.'];
                 }
-            } else if (Subject::find($subjectId)->name === 'Kiswahili') {
+            } elseif (Subject::find($subjectId)->name === 'Kiswahili') {
                 $attendanceCount = Attendance::where('form_id', $formId)
                     ->where('subject_id', $subjectId)
                     ->where('week_id', $weekId)
                     ->count();
 
                 if ($attendanceCount >= 1) {
-                    return response()->json(['success' => false, 'message' => 'This class can have a maximum of 1 remedial in the selected week.']);
+                    return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial in the selected week.'];
                 }
             }
         }
 
-        // Check if the maximum attendance limit has been reached
-        // $maxAttendanceLimit = in_array(Subject::find($subjectId)->name, ['English', 'Chemistry', 'Mathematics', 'Biology']) ? 2 : 1;
-
-        // $attendanceCount = Attendance::where('form_id', $formId)
-        //     ->where('subject_id', $subjectId)
-        //     ->where('week_id', $weekId)
-        //     ->where('user_id', $teacherId)
-        //     ->count();
-
-        // if ($attendanceCount >= $maxAttendanceLimit) {
-        //     return response()->json(['success' => false, 'message' => 'Maximum remedial limit reached for this subject and form in the selected week.']);
-        // }
-
-        // Create the attendance record
-        $attendance = new Attendance;
-        $attendance->user_id = $teacherId;
-        $attendance->form_id = $formId;
-        $attendance->lesson_id = $request->lesson;
-        $attendance->week_id = $weekId;
-        $attendance->subject_id = $subjectId;
-        $attendance->status = $request->has('status') ? 'make-up' : '';
-        $attendance->save();
-
-        return response()->json(['success' => true, 'message' => 'Record created successfully.']);
+        return ['success' => true];
     }
 
 
@@ -136,8 +157,6 @@ class AttendanceController extends Controller
         return view('remedial.pages.attendances.showusersperweek', compact('user', 'week', 'attendances'));
     }
 
-
-
     public function forms()
     {
         $forms = Form::all();
@@ -145,13 +164,6 @@ class AttendanceController extends Controller
         return view('remedial.pages.attendances.showformsallweeks', compact('forms'));
     }
 
-    // public function classrecords($id)
-    // {
-    //     $form = Form::findOrFail($id);
-    //     $attendances = $form->attendances;
-
-    //     return view('remedial.forms.show-attendance', compact('form', 'attendances'));
-    // }
 
     public function showAttendance($id)
     {

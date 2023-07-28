@@ -109,22 +109,32 @@
     </div>
 @endsection
 
+<!-- Your existing HTML code -->
+
 @section('scripts')
 <script>
     $(document).ready(function() {
 
-        $('.selectteacher').select2({});
-        $('.selectclass').select2();
+        // Your existing code ...
 
         var form = $("#create_attendance");
+        var submitBtn = form.find("button[type=submit]"); // Get the submit button
+
         form.on("submit", function(event) {
             event.preventDefault();
+
+            // Disable the submit button while the form is being submitted
+            submitBtn.prop('disabled', true);
+
             var data = $(this).serialize();
             $.ajax({
                 url: "{{ route('attendance.store') }}",
                 type: "POST",
                 data: data,
                 success: function(response) {
+                    // Re-enable the submit button after the form is successfully submitted
+                    submitBtn.prop('disabled', false);
+
                     if (response.success) {
                         swal({
                             title: "Success!",
@@ -144,6 +154,9 @@
                     }
                 },
                 error: function(error) {
+                    // Re-enable the submit button if there's an error
+                    submitBtn.prop('disabled', false);
+
                     // Handle the error response
                     console.log(error);
                 }
@@ -152,3 +165,4 @@
     });
 </script>
 @endsection
+
