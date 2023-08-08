@@ -1,11 +1,9 @@
 @php
-
     $attednaces = DB::table('attendances')->count();
     $timezone = new DateTimeZone('Africa/Nairobi');
     $currentDateTime = new DateTime('now', $timezone);
-    $currentDateTimeFormatted = $currentDateTime->format('d/m/y h:i a');
+    $currentDateTimeFormatted = $currentDateTime->format('D, d/m/y - h:i a');
 @endphp
-
 
 <!DOCTYPE html>
 <html>
@@ -73,12 +71,22 @@
         table td:last-child {
             width: 30%;
         } */
+
+        .logo {
+            display: block;
+            width: 60px; /* Adjust the width of the logo as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin: 0 auto 10px; /* Center the logo and add some margin at the bottom */
+        }
     </style>
 </head>
 
 <body>
+    <div style="text-align: center;">
+        <img src="{{ public_path('remedialsystem/assets/img/logo.png') }}" alt="Logo" class="logo">
+    </div>
     <h4>MOI NYABOHANSE GIRLS HIGH SCHOOL</h4>
-    <p> REMEDIAL ATTENDANCE RECORDS</p>
+    <p>REMEDIAL ATTENDANCE RECORDS</p>
     <table>
         <thead>
             <tr>

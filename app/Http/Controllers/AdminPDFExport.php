@@ -43,4 +43,20 @@ class AdminPDFExport extends Controller
 
         return $pdf->stream('weekly_report.pdf');
     }
+
+    public function PaymentSchedule()
+    {
+        $users = User::orderBy('name', 'asc')->get();
+
+
+        $data = [
+
+            'users' => $users
+        ];
+
+        $pdf = Pdf::loadView('remedial.payment-schedule', $data);
+
+        return $pdf->stream('payment-schedule.pdf');
+    }
+
 }

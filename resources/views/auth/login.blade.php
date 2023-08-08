@@ -70,12 +70,12 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="email" class="form-label">Zeraki Email</label>
-                        <input type="email" class="form-control" id="email" value="{{ old('email') }}" name="email" placeholder="Enter your Zeraki email" autofocus />
+                        <label for="login" class="form-label"> Phone or Zeraki Email</label>
+                        <input type="text" class="form-control" id="login" value="{{ old('login') }}" name="login" placeholder="Enter your email or phone" autofocus />
 
-                        @if ($errors->has('email'))
+                        @if ($errors->has('login'))
                             <div class="alert alert-danger mt-2" role="alert">
-                                {{ $errors->first('email') }}
+                                {{ $errors->first('login') }}
                             </div>
                         @endif
                     </div>
@@ -101,19 +101,18 @@
                     <div class="mb-3">
                         <div class="form-check">
                             @php
-                            $rememberChecked = isset($_COOKIE['remember_me']) ? 'checked' : '';
-                        @endphp
+                                $rememberChecked = isset($_COOKIE['remember_me']) ? 'checked' : '';
+                            @endphp
                             <input class="form-check-input" type="checkbox" value="1" name="remember" id="remember" {{ $rememberChecked }} />
                             <label class="form-check-label" for="remember"> Remember Me </label>
                         </div>
                     </div>
 
-
-
                     <div class="mb-3">
                         <button class="btn btn-sm btn-primary d-grid w-100" type="submit">Log in</button>
                     </div>
                 </form>
+
 
 
 

@@ -157,4 +157,6 @@ class UserController extends Controller
             ->get();
         return view('remedial.pages.attendances.user.weekdetails', compact('user', 'week', 'attendances'));
     }
+
+
 }

@@ -9,35 +9,19 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return true;
     }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
     public function rules(): array
     {
         return [
-            'email' => ['required', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
 
-    /**
-     * Handle a failed validation attempt.
-     *
-     * @param  \Illuminate\Validation\Validator  $validator
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
     {
         throw (new ValidationException($validator))
@@ -45,21 +29,16 @@ class LoginRequest extends FormRequest
             ->redirectTo($this->getRedirectUrl());
     }
 
-    /**
-     * Authenticate the user's credentials.
-     *
-     * @return void
-     *
-     * @throws \Illuminate\Validation\ValidationException
-     */
     public function authenticate(): void
     {
-        $credentials = $this->only('email', 'password');
-        $remember = $this->filled('remember'); // Check if the "remember" field is filled
+        $credentials = $this->only('login', 'password');
+        $remember = $this->filled('remember');
 
-        if (!Auth::attempt($credentials, $remember)) {
+        $fieldType = filter_var($credentials['login'], FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+
+        if (!Auth::attempt([$fieldType => $credentials['login'], 'password' => $credentials['password']], $remember)) {
             throw ValidationException::withMessages([
-                'email' => __('auth.failed'),
+                'login' => __('auth.failed'),
             ])->redirectTo($this->getRedirectUrl());
         }
 

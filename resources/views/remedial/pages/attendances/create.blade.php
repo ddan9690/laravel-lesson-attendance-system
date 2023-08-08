@@ -19,8 +19,7 @@
                             @csrf
                             <div>
                                 <label for="smallSelect" class="form-label">Teacher</label>
-                                <select id="selectteacher" name="teacher" required
-                                    class="form-select selectteacher form-select-sm">
+                                <select id="selectteacher" name="teacher" required class="form-select selectteacher form-select-sm">
                                     <option>Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -68,7 +67,17 @@
                                 <select id="smallSelect" name="lesson" class="form-select form-select-sm">
                                     <option>Select Lesson</option>
                                     @foreach ($lessons as $lesson)
-                                        <option value="{{ $lesson->id }}">{{ $lesson->name }}</option>
+                                        <option value="{{ $lesson->id }}">
+                                            @if ($lesson->name === 'L1')
+                                                6:10-6:50 am
+                                            @elseif ($lesson->name === 'L2')
+                                                6:50-7:30 am
+                                            @elseif ($lesson->name === 'L3')
+                                                6:30-7:10 pm
+                                            @elseif ($lesson->name === 'Practical')
+                                                Practical
+                                            @endif
+                                        </option>
                                     @endforeach
                                 </select>
                                 @error('lesson')
@@ -94,14 +103,13 @@
                             </div>
 
                             <div class="form-check mt-3">
-                                <input class="form-check-input" name="status" type="checkbox" value=""
-                                    id="status" />
+                                <input class="form-check-input" name="status" type="checkbox" value="" id="status" />
                                 <label class="form-check-label" for="defaultCheck1"> Make-Up </label>
                             </div>
 
-
                             <button type="submit" class="btn btn-sm btn-primary mt-3">Save</button>
                         </form>
+
                     </div>
                 </div>
             </div>

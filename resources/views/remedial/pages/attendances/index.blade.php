@@ -6,9 +6,10 @@
     @can('super')
     <h5 class="card-header">
         <span>
-            <a href="{{ route('attendance.create') }}" class="btn btn-primary btn-sm">Add New</a>
+
             <a href="{{ route('pdfexport') }}" class="btn btn-success btn-sm">Summary PDF</a>
             <a href="{{ route('finalreport') }}" class="btn btn-info btn-sm">Detailed PDF</a> <!-- Added button -->
+            <a href="{{ route('payment-schedule') }}" class="btn btn-primary btn-sm">Payment</a> <!-- Added button -->
         </span>
     </h5>
     @endcan

@@ -10,7 +10,6 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AttendanceController;
 
 
-
 Route::get('/', function () {
     return redirect()->route('login');
 });
@@ -47,14 +46,9 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::get('/remedial/classrecords/{id}/attendance/show', [FormController::class, 'showAttendance'])->name('form.attendance.show');
     Route::get('/remedial/classrecords/{id}/attendance/week/{week_id}', [FormController::class, 'showAttendanceWeek'])->name('form.attendance.week');
 
-
-
-
-
     Route::get('/remedial/attendance/{week}/{user_id}/show', [AttendanceController::class, 'userweekly'])->name('user.attendances.viewweekly');
     Route::delete('/remedial/attendance/{id}/delete', [AttendanceController::class, 'destroy'])->name('attendance.delete');
     Route::post('attendance/deleteAll', [AttendanceController::class, 'deleteAll'])->name('attendance.deleteAll');
-
 
     // forms/classes
     Route::get('/remedial/forms', [FormController::class, 'index'])->name('forms.index');
@@ -64,18 +58,16 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::patch('/remedial/form/{id}', [FormController::class, 'update'])->name('form.update');
     Route::delete('/remedial/form/delete/{id}', [FormController::class, 'destroy'])->name('form.destroy');
 
-
-
     // weeks
     Route::get('/remedial/weeks', [WeeksController::class, 'index'])->name('weeks.index');
     Route::get('/remedial/weeks/create', [WeeksController::class, 'create'])->name('week.create');
     Route::post('/remedial/weeks/store', [WeeksController::class, 'store'])->name('week.store');
     Route::delete('/remedial/weeks/{week}', [WeeksController::class, 'destroy'])->name('week.destroy');
 
-
-
     Route::get('/remedial/attendance/download', [AdminPDFExport::class, 'AllLessonCountExport'])->name('pdfexport');
     Route::get('/remedial/attendance/download/report', [AdminPDFExport::class, 'WeeklyAttendanceReportExport'])->name('finalreport');
+    Route::get('/remedial/attendance/payment-schedule/download', [AdminPDFExport::class, 'PaymentSchedule'])->name('payment-schedule');
+
 });
 
 Route::middleware(['auth'])->group(function () {
