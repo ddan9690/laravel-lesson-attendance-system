@@ -4,8 +4,8 @@
 
 # Install the dependencies
 #apt-get -y update
-#apt-get -y install autoconf unzip
-#apt-get -y install build-essential
+apt-get -y install autoconf unzip
+apt-get -y install build-essential
 
 # Set PECL defaults
 pecl channel-update
@@ -16,4 +16,4 @@ pecl config-set php_ini /opt/bitnami/php/etc/php.ini
 #pecl install swoole
 
 # Install phpredis
-#pecl install redis
+pecl install redis
