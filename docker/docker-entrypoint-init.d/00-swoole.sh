@@ -3,7 +3,7 @@
 # Make sure to chmod a+x on this file so it'll run during Bitnami's setup.
 
 # Install the dependencies
-apt-get -y update
+#apt-get -y update
 #apt-get -y install autoconf unzip
 #apt-get -y install build-essential
 
