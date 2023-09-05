@@ -7,7 +7,6 @@ apt-get -y update
 apt-get -y install autoconf unzip
 apt-get -y install build-essential
 
-
 # Set PECL defaults
 #pecl channel-update
 pecl channel-update pecl.php.net
