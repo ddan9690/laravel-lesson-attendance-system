@@ -4,8 +4,8 @@
 
 # Install the dependencies
 apt-get -y update
-apt-get -y install autoconf unzip
-apt-get -y install build-essential
+#apt-get -y install autoconf unzip
+#apt-get -y install build-essential
 
 # Set PECL defaults
 pecl channel-update
