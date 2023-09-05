@@ -16,4 +16,4 @@ pecl config-set php_ini /opt/bitnami/php/etc/php.ini
 #pecl install swoole
 
 # Install phpredis
-pecl install redis
+#pecl install redis
