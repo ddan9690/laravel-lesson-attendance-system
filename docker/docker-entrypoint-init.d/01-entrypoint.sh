@@ -7,6 +7,8 @@ set -e
 role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
  
+composer install --no-dev --no-interaction --optimize-autoloader
+
 if [ "$env" != "local" ]; then
     echo "Caching configuration..."
     #(cd /var/www/html && php artisan config:cache && php artisan route:cache && php artisan view:cache)
@@ -14,6 +16,7 @@ fi
  
 if [ "$role" = "app" ]; then
     echo "Running openswoole..."
+    
     # Run only once
 
     # Run the application in the background to avoid blocking bitnami execution.
