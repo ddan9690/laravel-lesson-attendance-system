@@ -33,7 +33,7 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::put('/remedial/users/{user}', [UserController::class, 'update'])->name('users.update');
     Route::delete('/remedial/users/{user}', [UserController::class, 'destroy'])->name('users.destroy');
     Route::put('/remedial/users/{user}/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
-
+    Route::get('/user/last-login', [UserController::class, 'lastLogin'])->name('user.lastLogin');
 
     Route::get('/remedial/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/remedial/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');

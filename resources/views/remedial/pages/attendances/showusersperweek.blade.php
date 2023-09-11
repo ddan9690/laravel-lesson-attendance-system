@@ -30,14 +30,19 @@
                                     <td style="white-space: nowrap">{{ $attendance->form->name }}</td>
                                     <td>{{ $attendance->subject->name }}</td>
                                     <td>
-                                        @if ($attendance->lesson->name === 'L1')
-                                            6:10-6:50 am
-                                        @elseif ($attendance->lesson->name === 'L2')
-                                            6:50-7:30am
-                                        @elseif ($attendance->lesson->name === 'L3')
-                                            6:30-7:10pm
+                                        @if (in_array($attendance->lesson->name, ['L1', 'L2', 'L3', 'Morning', 'Evening']))
+                                            @if ($attendance->lesson->name === 'Morning')
+                                                6:10-7:10 am
+                                            @elseif ($attendance->lesson->name === 'Evening')
+                                                6:30-7:30 pm
+                                            @else
+                                                {{ $attendance->lesson->start }} - {{ $attendance->lesson->end }}
+                                            @endif
                                         @elseif ($attendance->lesson->name === 'Practical')
                                             Practical
+                                        @else
+                                            <!-- Handle other lesson names here if needed -->
+                                            {{ $attendance->lesson->name }}
                                         @endif
                                     </td>
 
@@ -54,6 +59,7 @@
                             @endforeach
                         @endif
                     </tbody>
+
                 </table>
             </div>
         </div>

@@ -19,7 +19,8 @@
                             @csrf
                             <div>
                                 <label for="smallSelect" class="form-label">Teacher</label>
-                                <select id="selectteacher" name="teacher" required class="form-select selectteacher form-select-sm">
+                                <select id="selectteacher" name="teacher" required
+                                    class="form-select selectteacher form-select-sm">
                                     <option>Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -67,19 +68,17 @@
                                 <select id="smallSelect" name="lesson" class="form-select form-select-sm">
                                     <option>Select Lesson</option>
                                     @foreach ($lessons as $lesson)
-                                        <option value="{{ $lesson->id }}">
-                                            @if ($lesson->name === 'L1')
-                                                6:10-6:50 am
-                                            @elseif ($lesson->name === 'L2')
-                                                6:50-7:30 am
-                                            @elseif ($lesson->name === 'L3')
-                                                6:30-7:10 pm
-                                            @elseif ($lesson->name === 'Practical')
-                                                Practical
-                                            @endif
-                                        </option>
+                                        @if ($lesson->name === 'Practical')
+                                            <option value="{{ $lesson->id }}">Practical</option>
+                                        @elseif (in_array($lesson->name, ['Morning', 'Evening']))
+                                            <option value="{{ $lesson->id }}">{{ $lesson->start }} -
+                                                {{ $lesson->end }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
+
+
+
                                 @error('lesson')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
@@ -103,7 +102,8 @@
                             </div>
 
                             <div class="form-check mt-3">
-                                <input class="form-check-input" name="status" type="checkbox" value="" id="status" />
+                                <input class="form-check-input" name="status" type="checkbox" value=""
+                                    id="status" />
                                 <label class="form-check-label" for="defaultCheck1"> Make-Up </label>
                             </div>
 
@@ -120,58 +120,57 @@
 <!-- Your existing HTML code -->
 
 @section('scripts')
-<script>
-    $(document).ready(function() {
+    <script>
+        $(document).ready(function() {
 
-        $('.selectteacher').select2();
-        $('.selectclass').select2();
+            $('.selectteacher').select2();
+            $('.selectclass').select2();
 
-        var form = $("#create_attendance");
-        var submitBtn = form.find("button[type=submit]"); // Get the submit button
+            var form = $("#create_attendance");
+            var submitBtn = form.find("button[type=submit]"); // Get the submit button
 
-        form.on("submit", function(event) {
-            event.preventDefault();
+            form.on("submit", function(event) {
+                event.preventDefault();
 
-            // Disable the submit button while the form is being submitted
-            submitBtn.prop('disabled', true);
+                // Disable the submit button while the form is being submitted
+                submitBtn.prop('disabled', true);
 
-            var data = $(this).serialize();
-            $.ajax({
-                url: "{{ route('attendance.store') }}",
-                type: "POST",
-                data: data,
-                success: function(response) {
-                    // Re-enable the submit button after the form is successfully submitted
-                    submitBtn.prop('disabled', false);
+                var data = $(this).serialize();
+                $.ajax({
+                    url: "{{ route('attendance.store') }}",
+                    type: "POST",
+                    data: data,
+                    success: function(response) {
+                        // Re-enable the submit button after the form is successfully submitted
+                        submitBtn.prop('disabled', false);
 
-                    if (response.success) {
-                        swal({
-                            title: "Success!",
-                            text: response.message,
-                            type: "success",
-                            showConfirmButton: false
-                        }).then(function() {
-                            form.trigger('reset');
-                        });
-                    } else {
-                        swal({
-                            title: "Warning!",
-                            text: response.message,
-                            type: "warning",
-                            showConfirmButton: false
-                        });
+                        if (response.success) {
+                            swal({
+                                title: "Success!",
+                                text: response.message,
+                                type: "success",
+                                showConfirmButton: false
+                            }).then(function() {
+                                form.trigger('reset');
+                            });
+                        } else {
+                            swal({
+                                title: "Warning!",
+                                text: response.message,
+                                type: "warning",
+                                showConfirmButton: false
+                            });
+                        }
+                    },
+                    error: function(error) {
+                        // Re-enable the submit button if there's an error
+                        submitBtn.prop('disabled', false);
+
+                        // Handle the error response
+                        console.log(error);
                     }
-                },
-                error: function(error) {
-                    // Re-enable the submit button if there's an error
-                    submitBtn.prop('disabled', false);
-
-                    // Handle the error response
-                    console.log(error);
-                }
+                })
             })
-        })
-    });
-</script>
+        });
+    </script>
 @endsection
-

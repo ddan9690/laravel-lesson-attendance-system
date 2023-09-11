@@ -22,7 +22,7 @@
                                 <option value="">Select a week</option>
                                 @foreach ($weeks as $week)
                                     <option value="{{ $week->id }}" {{ old('week_id') == $week->id ? 'selected' : '' }}>
-                                        {{ $week->week_number }}
+                                       Week {{ $week->week_number }}
                                     </option>
                                 @endforeach
                             </select>
@@ -39,7 +39,7 @@
                             @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-sm btn-primary">Submit</button>
                     </form>
                 </div>
             </div>

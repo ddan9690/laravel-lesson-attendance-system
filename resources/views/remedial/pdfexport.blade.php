@@ -78,6 +78,14 @@
             height: auto; /* Maintain aspect ratio */
             margin: 0 auto 10px; /* Center the logo and add some margin at the bottom */
         }
+
+        .notice {
+            text-align: center;
+            font-size: 16px;
+            color: red;
+            text-transform: uppercase;
+            margin-top: 10px;
+        }
     </style>
 </head>
 
@@ -110,6 +118,7 @@
         </tbody>
     </table>
     <p style="font-weight: bold; font-style: italic; font-size: small;">Records as at <?= $currentDateTimeFormatted ?></p>
+    {{-- <p class="notice"> NOTE: Make-up lessons will be paid at half the declared rate.</p> --}}
 </body>
 
 </html>

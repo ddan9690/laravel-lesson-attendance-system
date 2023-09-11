@@ -111,8 +111,8 @@ class AttendanceController extends Controller
                     ->where('week_id', $weekId)
                     ->count();
 
-                if ($attendanceCount >= 2) {
-                    return ['success' => false, 'message' => 'This class can have a maximum of 2 remedials for this subject in the selected week.'];
+                if ($attendanceCount >= 1) {
+                    return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial for this subject in the selected week.'];
                 }
             } elseif (Subject::find($subjectId)->name === 'Kiswahili') {
                 $attendanceCount = Attendance::where('form_id', $formId)

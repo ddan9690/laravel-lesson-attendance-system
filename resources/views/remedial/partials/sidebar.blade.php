@@ -92,6 +92,14 @@
         </a>
       </li>
 
+      {{-- <li class="menu-item ">
+        <a href="{{route('user.lastLogin')}}" class="menu-link">
+
+          <i class='menu-icon tf-icons bx bxs-book-open'></i>
+          <div data-i18n="Analytics">User Activity</div>
+        </a>
+      </li> --}}
+
 
 
 

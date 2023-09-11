@@ -27,12 +27,28 @@
                                 <td>{{ $rowNumber++ }}</td>
                                 <td>{{ $attendance->created_at->format('D d/m/y') }}</td>
                                 <td>{{ $attendance->subject->name }}</td>
-                                <td>{{ $attendance->lesson->name }}</td>
+                                <td>
+                                    @if (in_array($attendance->lesson->name, ['L1', 'L2', 'L3', 'Morning', 'Evening']))
+                                        @if ($attendance->lesson->name === 'Morning')
+                                            6:10-7:10 am
+                                        @elseif ($attendance->lesson->name === 'Evening')
+                                            6:30-7:30 pm
+                                        @else
+                                            {{ $attendance->lesson->start }} - {{ $attendance->lesson->end }}
+                                        @endif
+                                    @elseif ($attendance->lesson->name === 'Practical')
+                                        Practical
+                                    @else
+                                        <!-- Handle other lesson names here if needed -->
+                                        {{ $attendance->lesson->name }}
+                                    @endif
+                                </td>
                                 <td>{{ $attendance->user->name }}</td>
                             </tr>
                         @endforeach
                     @endforeach
                 </tbody>
+
             </table>
         </div>
     </div>
