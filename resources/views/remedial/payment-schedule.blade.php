@@ -4,14 +4,20 @@
 <head>
     <title>Remedial</title>
     <style>
+        @page {
+            size: landscape;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         table {
             border: 1px solid #333;
             border-collapse: collapse;
             padding: 4px;
             width: 100%;
-            /* Set table to landscape orientation */
-            orientation: landscape;
-            margin: 0 auto;
         }
 
         table th {
@@ -33,7 +39,7 @@
 
         h4, p {
             text-align: center;
-            margin: 0 auto;
+            margin: 0;
             line-height: 1;
         }
 
@@ -63,9 +69,6 @@
             width: 5%;
             text-align: center;
         }
-
-        /* Adjust width of Sign column */
-
     </style>
 </head>
 
