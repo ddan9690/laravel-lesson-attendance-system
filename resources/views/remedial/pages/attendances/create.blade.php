@@ -70,7 +70,7 @@
                                     @foreach ($lessons as $lesson)
                                         @if ($lesson->name === 'Practical')
                                             <option value="{{ $lesson->id }}">Practical</option>
-                                        @elseif (in_array($lesson->name, ['Morning', 'Evening']))
+                                        @elseif (in_array($lesson->name, ['L1', 'L2','L3']))
                                             <option value="{{ $lesson->id }}">{{ $lesson->start }} -
                                                 {{ $lesson->end }}</option>
                                         @endif

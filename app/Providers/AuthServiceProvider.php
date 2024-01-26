@@ -33,7 +33,7 @@ class AuthServiceProvider extends ServiceProvider
         });
 
         Gate::define('jamadata', function ($user) {
-            return $user->id == 241;
+            return $user->email == 'dancanotieno@nyabogirls';
         });
     }
 }

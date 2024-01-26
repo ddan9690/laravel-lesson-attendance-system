@@ -118,7 +118,11 @@
         </tbody>
     </table>
     <p style="font-weight: bold; font-style: italic; font-size: small;">Records as at <?= $currentDateTimeFormatted ?></p>
-    {{-- <p class="notice"> NOTE: Make-up lessons will be paid at half the declared rate.</p> --}}
+
+    <p style="text-align: center; margin-top: 20px;">
+        To view your lessons, please click this link to login:
+        <a href="https://remedial.apptempest.com/remedial/attendance/mylessons">View My Lessons</a>
+    </p>
 </body>
 
 </html>

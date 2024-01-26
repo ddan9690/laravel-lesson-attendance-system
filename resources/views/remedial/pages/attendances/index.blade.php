@@ -3,7 +3,7 @@
 @section('content')
 <div class="col-md-8">
     <div class="card">
-    @can('super')
+    @can('admin')
     <h5 class="card-header">
         <span>
 

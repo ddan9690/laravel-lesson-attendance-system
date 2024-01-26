@@ -3,14 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-
-
-
-
 use App\Models\Week;
-use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
-
 
 class AdminPDFExport extends Controller
 {
@@ -18,15 +12,15 @@ class AdminPDFExport extends Controller
     {
         $users = User::orderBy('name', 'asc')->get();
 
-
         $data = [
-
-            'users' => $users
+            'users' => $users,
         ];
 
         $pdf = Pdf::loadView('remedial.pdfexport', $data);
 
-        return $pdf->stream('remedial.pdf');
+        $filename = 'Remedial_' . now()->format('H_i_s-Ymd') . '.pdf';
+
+        return $pdf->download($filename);
     }
 
     public function WeeklyAttendanceReportExport()
@@ -36,7 +30,7 @@ class AdminPDFExport extends Controller
 
         $data = [
             'users' => $users,
-            'weeks' => $weeks
+            'weeks' => $weeks,
         ];
 
         $pdf = PDF::loadView('remedial.weeklyreportpdf', $data);
@@ -48,10 +42,9 @@ class AdminPDFExport extends Controller
     {
         $users = User::orderBy('name', 'asc')->get();
 
-
         $data = [
 
-            'users' => $users
+            'users' => $users,
         ];
 
         $pdf = Pdf::loadView('remedial.payment-schedule', $data);
