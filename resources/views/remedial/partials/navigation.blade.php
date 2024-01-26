@@ -4,7 +4,7 @@
             <i class="bx bx-menu bx-sm"></i>
         </a>
     </div>
-  
+
     <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
         <!-- Search -->
         <div class="navbar-anav align-items-center">
@@ -14,13 +14,14 @@
             </div>
         </div>
         <!-- /Search -->
-  
+
         <ul class="navbar-nav flex-row align-items-center ms-auto">
-        
+
             <li class="nav-item navbar-dropdown dropdown-user dropdown">
                 <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
                     <div class="avatar avatar-online">
-                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQHk_gUwMOOH1JOEaOzPzdHQa-KYOXoYcxFUcXUy830Yg&s" alt="Avatar" class="w-px-40 h-auto rounded-circle" />
+                        <img src="{{ asset('remedialsystem/assets/img/1.jpg') }}" alt="Avatar" class="w-px-40 h-auto rounded-circle" />
+
                     </div>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end">
@@ -63,8 +64,7 @@
                     </li>
                 </ul>
             </li>
-           
+
         </ul>
     </div>
   </nav>
-  

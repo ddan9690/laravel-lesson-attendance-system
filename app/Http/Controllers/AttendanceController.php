@@ -2,15 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
 use App\Models\Form;
-use App\Models\User;
-use App\Models\Week;
 use App\Models\Lesson;
 use App\Models\Subject;
-use App\Models\Attendance;
+use App\Models\User;
+use App\Models\Week;
 use Illuminate\Http\Request;
-use Alert;
-
 
 class AttendanceController extends Controller
 {
@@ -64,81 +62,85 @@ class AttendanceController extends Controller
         return response()->json(['success' => true, 'message' => 'Record created successfully.']);
     }
 
-
-
-
-
     private function checkRestrictions(Request $request)
     {
         $formId = $request->input('class');
         $subjectId = $request->input('subject');
         $weekId = $request->input('week');
 
-        // Define restricted classes and subjects for Form 1
-        $restrictedClassesForForm1 = [
-            '1 Diamond', '1 Emerald', '1 Topaz', '1 Gold', '1 Sapphire', '1 Pearl','Form 1'
+        // Define classes with specific restrictions for Mathematics
+        $classesWithMathRestrictions = [
+            '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
+            '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl', '3 Sapphire', '3 Topaz',
+            '4 Diamond', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
         ];
 
-        $restrictedSubjectsForForm1 = [
-            'English', 'Kiswahili', 'Biology', 'Mathematics', 'CRE', 'Chemistry', 'History', 'Geography', 'Physics',
+        // Define classes with maximum 1 remedial lessons per week for all subjects
+        $classesWithMaxOneRemedial = [
+            '1 Diamond', '1 Emerald', '1 Gold', '1 Pearl',
+            '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
+            '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl', '3 Sapphire', '3 Topaz',
+            '4 Diamond', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
         ];
 
-        // Check for restriction on Form 1 and specific subjects
-        if (in_array(Form::find($formId)->name, $restrictedClassesForForm1) && in_array(Subject::find($subjectId)->name, $restrictedSubjectsForForm1)) {
-            $attendanceCount = Attendance::where('form_id', $formId)
+        // Define classes with subjects excluded from remedial lessons
+        $classesWithExcludedSubjects = [
+            '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
+            '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl', '3 Sapphire', '3 Topaz',
+            '4 Diamond', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
+        ];
+
+        // Define excluded subjects
+        $excludedSubjects = ['Agriculture', 'Business', 'Computer', 'CRE', 'French', 'Geography', 'History', 'Home Science', 'Physics'];
+
+        // Define classes with weekly lesson restrictions for specific subjects
+        $classesWithWeeklyRestrictions = [
+            'Form 2', 'Form 3', 'Form 4',
+        ];
+
+        // Check restrictions for excluded subjects
+        if (in_array(Form::find($formId)->name, $classesWithExcludedSubjects) && in_array(Subject::find($subjectId)->name, $excludedSubjects)) {
+            return ['success' => false, 'message' => 'Block subject cannot be recorded to a single stream. Please select a block class.'];
+        }
+
+        // Check restrictions for Mathematics
+        elseif (in_array(Form::find($formId)->name, $classesWithMathRestrictions) && Subject::find($subjectId)->name === 'Mathematics') {
+            $attendanceCountForMath = Attendance::where('form_id', $formId)
                 ->where('subject_id', $subjectId)
                 ->where('week_id', $weekId)
                 ->count();
 
-            if ($attendanceCount >= 1) {
-                return ['success' => false, 'message' => 'Form 1 can have a maximum of 1 remedial for this subject in the selected week.'];
+            if ($attendanceCountForMath >= 2) {
+                return ['success' => false, 'message' => 'Mathematics can have a maximum of 2 remedials per week.'];
             }
         }
 
-        // Check other restrictions for different forms and subjects
-        $restrictedForms = [
-            '2 Diamond', '2 Emerald', '2 Topaz', '2 Gold', '2 Sapphire', '2 Pearl',
-            '3 Diamond', '3 Topaz', '3 Gold', '3 Sapphire', '3 Pearl',
-            '4 East', '4 West', '4 Sapphire', '4 North'
-        ];
+        // Check restrictions for other subjects
+        elseif (in_array(Form::find($formId)->name, $classesWithMaxOneRemedial)) {
+            $attendanceCountForOtherSubjects = Attendance::where('form_id', $formId)
+                ->where('subject_id', $subjectId)
+                ->where('week_id', $weekId)
+                ->count();
 
-        $restrictedSubjects = ['English', 'Chemistry', 'Biology', 'Mathematics'];
+            if ($attendanceCountForOtherSubjects >= 1) {
+                return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial per week for the selected subject.'];
+            }
+        }
 
-        if (in_array(Form::find($formId)->name, $restrictedForms)) {
-            if (in_array(Subject::find($subjectId)->name, $restrictedSubjects)) {
-                $attendanceCount = Attendance::where('form_id', $formId)
-                    ->where('subject_id', $subjectId)
-                    ->where('week_id', $weekId)
-                    ->count();
+        // Check weekly lesson restrictions for specific subjects
+        elseif (in_array(Form::find($formId)->name, $classesWithWeeklyRestrictions) && in_array(Subject::find($subjectId)->name, ['Agriculture', 'Business', 'Computer', 'CRE', 'French', 'Geography', 'History', 'Home Science', 'Physics'])) {
+            $attendanceCountForWeeklyRestrictions = Attendance::where('form_id', $formId)
+                ->where('subject_id', $subjectId)
+                ->where('week_id', $weekId)
+                ->count();
 
-                if ($attendanceCount >= 1) {
-                    return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial for this subject in the selected week.'];
-                }
-            } elseif (Subject::find($subjectId)->name === 'Kiswahili') {
-                $attendanceCount = Attendance::where('form_id', $formId)
-                    ->where('subject_id', $subjectId)
-                    ->where('week_id', $weekId)
-                    ->count();
-
-                if ($attendanceCount >= 1) {
-                    return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial in the selected week.'];
-                }
+            if ($attendanceCountForWeeklyRestrictions >= 4) {
+                return ['success' => false, 'message' => 'Maximum teachers reached for this block subject in the selected class.'];
             }
         }
 
         return ['success' => true];
     }
-
-
-
-
-
-
-
-
-
-
-
 
 
     public function show($id)
@@ -149,7 +151,6 @@ class AttendanceController extends Controller
 
         return view('remedial.pages.attendances.showuserallweeks', compact('user', 'attendances', 'weeks'));
     }
-
 
     public function userweekly($week, $user_id)
     {
@@ -170,7 +171,6 @@ class AttendanceController extends Controller
         return view('remedial.pages.attendances.showformsallweeks', compact('forms'));
     }
 
-
     public function showAttendance($id)
     {
         $form = Form::findOrFail($id);
@@ -184,14 +184,16 @@ class AttendanceController extends Controller
         return view('remedial.forms.show-attendance', compact('form', 'weeklyAttendances'));
     }
 
-
-
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
         $attendance = Attendance::findOrFail($id);
-        $attendance->delete();
+        $success = $attendance->delete();
 
-        return redirect()->back()->with('success', 'Attendance deleted successfully.');
+        $response = [
+            'message' => $success ? 'Attendance deleted successfully.' : 'Unable to delete attendance record.',
+        ];
+
+        return response()->json($response);
     }
 
     public function deleteAll()

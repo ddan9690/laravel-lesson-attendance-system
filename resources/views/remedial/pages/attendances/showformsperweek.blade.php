@@ -3,26 +3,28 @@
 @section('title', 'Form Attendance')
 
 @section('content')
-<div class="col-md-8">
-    <div class="card">
-        <div class="table-responsive text-nowrap">
-            <table class="table table-striped table-bordered">
-                <thead>
-                    <tr>
-                        <th style="width: 5%;">Week</th>
-                        <th style="width: 10%;">Lessons</th>
-                    </tr>
-                </thead>
-                <tbody class="table-border-bottom-0">
-                    @foreach ($weeks as $week)
-                        <tr onclick="window.location='{{ route('form.attendance.week', ['id' => $form->id, 'week_id' => $week->id]) }}';" style="cursor: pointer;">
-                            <td style="width: 5%;">Week {{ $week->week_number }}</td>
-                            <td style="width: 10%;">{{ $form->attendances->where('week_id', $week->id)->count() }}</td>
+    <div class="col-md-8">
+        <div class="card">
+            <h4 class="mt-3 text-center">{{ $form->name }}</h4>
+
+            <div class="table-responsive text-nowrap">
+                <table class="table table-striped table-bordered">
+                    <thead>
+                        <tr>
+                            <th style="width: 5%;">Week</th>
+                            <th style="width: 10%;">Lessons</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody class="table-border-bottom-0">
+                        @foreach ($weeks as $week)
+                            <tr onclick="window.location='{{ route('form.attendance.week', ['id' => $form->id, 'week_id' => $week->id]) }}';" style="cursor: pointer;">
+                                <td style="width: 5%;">Week {{ $week->week_number }}</td>
+                                <td style="width: 10%;">{{ $form->attendances->where('week_id', $week->id)->count() }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-</div>
 @endsection

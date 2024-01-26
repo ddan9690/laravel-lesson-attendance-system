@@ -53,8 +53,13 @@ class CommentController extends Controller
         $comment->comment = $validatedData['comment'];
         $comment->save();
 
-        return redirect()->back()->with('success', 'Comment added successfully');
+        // Return simple JSON response
+        return response()->json([
+            'success' => true,
+            'message' => 'Comment added successfully',
+        ]);
     }
+
 
     /**
      * Display the specified resource.

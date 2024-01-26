@@ -1,12 +1,27 @@
 @extends('remedial.layouts.master')
+
 @section('title', 'Attendance Detail')
 
 @section('content')
+<style>
+    .table-sm td,
+    .table-sm th {
+        white-space: nowrap;
+        padding: 0.5rem;
+    }
+
+</style>
+    @if(session('success'))
+        <div class="alert alert-success">
+            {{ session('success') }}
+        </div>
+    @endif
+
     <div class="card">
-        <h5 class="card-header">{{ $user->name }}'s Attendance for Week {{ $week->week_number }}</h5>
+        <h5 class="card-header">{{ $user->name }}'s Lessons for Week {{ $week->week_number }}</h5>
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-striped table-sm">
+                <table class="table table-striped table-sm table-bordered">
                     <thead>
                         <tr>
                             <th>Date</th>
@@ -14,8 +29,8 @@
                             <th>Subject</th>
                             <th>Lesson</th>
                             @can('admin')
-                            <th>Action</th>
-                          @endcan
+                                <th>Action</th>
+                            @endcan
                         </tr>
                     </thead>
                     <tbody>
@@ -41,27 +56,87 @@
                                         @elseif ($attendance->lesson->name === 'Practical')
                                             Practical
                                         @else
-                                            <!-- Handle other lesson names here if needed -->
                                             {{ $attendance->lesson->name }}
                                         @endif
                                     </td>
 
                                     @can('admin')
                                     <td>
-                                        <form method="POST" action="{{ route('attendance.delete', ['id' => $attendance->id]) }}">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this attendance?')">Delete</button>
-                                        </form>
+                                        <a href="#" class="text-danger delete-btn" data-attendance-id="{{ $attendance->id }}" data-toggle="modal" data-target="#deleteModal">
+                                            {{-- <i class="fas fa-trash-alt"></i> --}}
+                                            <i class='menu-icon tf-icons bx bxs-trash'></i>
+
+                                        </a>
                                     </td>
                                     @endcan
                                 </tr>
                             @endforeach
                         @endif
                     </tbody>
-
                 </table>
             </div>
         </div>
     </div>
 @endsection
+
+@push('styles')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" integrity="sha512-vKMx8UnXk60zUwyUnUPM3HbQo8QfmNx7+ltw8Pm5zLusl1XIfwcxo8DbWCqMGKaWeNxWA8yrx5v3SaVpMvR3CA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+@endpush
+
+@section('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js" integrity="sha512-VEd+nq25CkR676O+pLBnDW09R7VQX9Mdiij052gVCp5yVH3jGtH70Ho/UUv4mJDsEdTvqRCFZg0NKGiojGnUCw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $(document).ready(function() {
+            // Delete Button Click Event
+            $('.delete-btn').on('click', function() {
+                var attendanceId = $(this).data('attendance-id');
+                deleteAttendance(attendanceId);
+            });
+
+            // Function to handle Attendance Deletion
+            function deleteAttendance(attendanceId) {
+
+                var confirmed = confirm("Are you sure you want to delete this record?");
+
+
+                if (confirmed) {
+                    // Perform the AJAX request for deletion
+                    $.ajax({
+                        url: "{{ url('remedial/attendance') }}/" + attendanceId + "/delete",
+                        type: "DELETE",
+                        data: {
+                            "_token": "{{ csrf_token() }}",
+                        },
+                        success: function(response) {
+                            // Display success or error message using toastr
+                            if (response.message) {
+                                // Display success message
+                                toastr.success(response.message, "", { timeOut: 5000 });
+                            } else {
+                                toastr.error(response.message);
+                            }
+
+                            location.reload();
+                        },
+                        error: function(error) {
+                            // Display error message
+                            toastr.error("Error: Unable to delete attendance record.");
+                        }
+                    });
+                } else {
+                    // Display info message
+                    toastr.info("Your attendance record is safe!");
+                }
+            }
+
+            // Toastr configuration
+            toastr.options = {
+                positionClass: 'toast-top-center',
+                timeOut: 5000, // 5 seconds
+            };
+        });
+    </script>
+@endsection
+
+
+

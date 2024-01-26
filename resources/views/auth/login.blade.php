@@ -70,8 +70,8 @@
                     @csrf
 
                     <div class="mb-3">
-                        <label for="login" class="form-label"> Phone or Zeraki Email</label>
-                        <input type="text" class="form-control" id="login" value="{{ old('login') }}" name="login" placeholder="Enter your email or phone" autofocus />
+                        <label for="login" class="form-label"> Phone Number</label>
+                        <input type="text" class="form-control" id="login" value="{{ old('login') }}" name="login" placeholder="Enter your phone number" autofocus />
 
                         @if ($errors->has('login'))
                             <div class="alert alert-danger mt-2" role="alert">
@@ -82,7 +82,7 @@
 
                     <div class="mb-3 form-password-toggle">
                         <div class="d-flex justify-content-between">
-                            <label class="form-label" for="password">Password</label>
+                            <label class="form-label" for="password">Password<span style="color: green; margin-left: 5px;">*</span></label>
                         </div>
 
                         <div class="input-group input-group-merge">
@@ -91,12 +91,15 @@
                             <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                         </div>
 
+                        <small style="color: green;">Use your phone number as the password</small>
+
                         @if ($errors->has('password'))
                             <div class="alert alert-danger mt-2" role="alert">
                                 {{ $errors->first('password') }}
                             </div>
                         @endif
                     </div>
+
 
                     <div class="mb-3">
                         <div class="form-check">

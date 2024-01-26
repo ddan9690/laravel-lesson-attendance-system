@@ -6,6 +6,8 @@
 <div class="col-md-8">
     <div class="card">
         {{-- <h4 class="mt-3 text-center">Total Lessons: {{ $attendances->count() }}</h4> --}}
+        <h4 class="mt-3 text-center">{{ $form->name }}</h4>
+
         <div class="table-responsive text-nowrap">
             <table class="table table-striped table-bordered">
                 <thead>

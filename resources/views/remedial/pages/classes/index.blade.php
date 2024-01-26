@@ -3,7 +3,9 @@
 @section('content')
     <div class="col-md-6 mx-auto">
         <div class="card">
+            @can('jamadata')
             <a href="{{ route('form.create') }}" class="btn btn-sm btn-primary">Add New Class</a>
+            @endcan
 
             <div id="successMessage" class="alert alert-success" style="display: none;"></div>
             <div class="table-responsive text-nowrap">

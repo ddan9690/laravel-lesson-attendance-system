@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\WeeksController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\AttendanceController;
 
 
@@ -26,6 +27,7 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
 
 
     Route::get('/remedial/users', [UserController::class, 'index'])->name('users.index');
+    // Route::get('/settings', [SettingsController::class, 'index'])->name('settings.index');
 
     Route::get('/remedial/users/create', [UserController::class, 'create'])->name('users.create');
     Route::post('/remedial/users', [UserController::class, 'store'])->name('users.store');

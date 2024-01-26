@@ -10,10 +10,10 @@
         @endcan
 
         <div class="table-responsive text-nowrap">
-            <table class="table">
+            <table class="table table-sm table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th style="width: 5px;">#</th>
+
                         <th>Form</th>
                         <th>Total</th>
                     </tr>
@@ -21,7 +21,7 @@
                 <tbody class="table-border-bottom-0">
                     @foreach ($forms as $form)
                     <tr onclick="window.location='{{ route('form.attendance.show', $form->id) }}';" style="cursor: pointer;">
-                        <td>{{ $loop->iteration }}</td>
+
                         <td>{{ $form->name }}</td>
                         <td>{{ $form->attendances->count() }}</td>
                     </tr>

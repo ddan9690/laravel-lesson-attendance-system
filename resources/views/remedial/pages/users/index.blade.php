@@ -27,7 +27,6 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Last Login</th>
                             <th>Phone</th>
                             <th>Email</th>
                             <th>Code</th>
@@ -43,7 +42,6 @@
                             <tr>
                                 <td>{{ $users->firstItem() + $loop->index }}</td>
                                 <td>{{ $user->name }}</td>
-                                <td>{{ $user->last_login }}</td>
                                 <td>{{ $user->phone }}</td>
                                 <td>{{ $user->email }}</td>
                                 <td>

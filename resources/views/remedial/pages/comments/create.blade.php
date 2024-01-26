@@ -1,4 +1,5 @@
 @extends('remedial.layouts.master')
+
 @section('title', 'Create Comment')
 
 @section('content')
@@ -13,7 +14,7 @@
                         <div class="alert alert-success">{{ session('success') }}</div>
                     @endif
 
-                    <form method="POST" action="{{ route('comment.store') }}">
+                    <form id="create_comment">
                         @csrf
 
                         <div class="mb-3">
@@ -45,4 +46,49 @@
             </div>
         </div>
     </div>
+
+    @section('scripts')
+        <script>
+            $(document).ready(function() {
+                var form = $("#create_comment");
+
+                form.on("submit", function(event) {
+                    event.preventDefault();
+
+                    var data = form.serialize();
+
+                    $.ajax({
+                        url: "{{ route('comment.store') }}",
+                        type: "POST",
+                        data: data,
+                        success: function(response) {
+                            if (response.success) {
+                                swal({
+                                    title: "Success!",
+                                    text: response.message,
+                                    type: "success",
+                                    showConfirmButton: false
+                                }).then(function() {
+                                    // Optionally, you can redirect or perform other actions after success
+                                    location.reload();
+                                });
+                            } else {
+                                swal({
+                                    title: "Warning!",
+                                    text: response.message,
+                                    type: "warning",
+                                    showConfirmButton: false
+                                });
+                            }
+                        },
+                        error: function(error) {
+                            console.log(error);
+                            // Handle the error response
+                            swal("Error", "Failed to submit comment. Please try again.", "error");
+                        }
+                    });
+                });
+            });
+        </script>
+    @endsection
 @endsection

@@ -15,7 +15,7 @@
     @endcan
 
     <div class="table-responsive text-nowrap">
-        <table class="table table-striped table-sm">
+        <table class="table table-striped table-sm table-bordered">
             <thead>
                 <tr>
                     <th style="width: 5px;">#</th>
