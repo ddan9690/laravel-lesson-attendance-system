@@ -59,7 +59,7 @@
 @section('scripts')
 <script>
     function confirmDelete() {
-        return confirm('Are you sure you want to delete this week?');
-    }
+            return confirm('Warning: Deleting this week will also delete all remedial lessons for that week. This action cannot be undone. Are you sure you want to proceed?');
+        }
 </script>
 @endsection

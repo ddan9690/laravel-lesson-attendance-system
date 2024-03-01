@@ -28,7 +28,8 @@
                                     <form action="{{ route('form.destroy', ['id' => $form->id]) }}" method="POST" style="display: inline-block;">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure? This record will be permanently deleted!')">Delete</button>
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Are you sure? This will delete all remedial lessons for this class. This action cannot be undone!')">Delete</button>
+
                                     </form>
                                 </td>
                             </tr>

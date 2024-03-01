@@ -1,26 +1,30 @@
 @extends('remedial.layouts.master')
 @section('title', 'Attendance')
+
 @section('content')
     <div class="col-12 mx-auto">
         <div class="card">
             @can('admin')
-                <h5 class="card-header"><span><a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Add
-                            New</a></span>
-                            <span>
-                                <form action="{{ route('attendance.deleteAll') }}" method="POST" class="d-inline">
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete all attendances?')">Delete All Remedial Records!</button>
-                                </form>
-                            </span>
-                        </h5>
+                <h5 class="card-header">
+                    <span>
+                        <a href="{{ route('users.create') }}" class="btn btn-primary btn-sm">Add New</a>
+                    </span>
+                    <span>
+                        <form action="{{ route('attendance.deleteAll') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm"
+                                onclick="return confirmDeleteAll()">Delete All Remedial Records!</button>
+                        </form>
+                    </span>
+                </h5>
             @endcan
-
 
             @if (Session::has('message'))
                 <div class="alert alert-success">
                     {{ Session::get('message') }}
                 </div>
             @endif
+
             <div class="table-responsive text-nowrap">
                 <table class="table table-sm table-bordered table-hover table-striped" id="users-table">
                     <thead>
@@ -52,7 +56,6 @@
                                     @endif
                                 </td>
 
-
                                 @can('super')
                                     <td>
                                         <a class="btn btn-primary btn-sm"
@@ -61,7 +64,7 @@
                                             action="{{ route('users.destroy', ['user' => $user->id]) }}" method="post">
                                             @csrf
                                             @method('delete')
-                                            <button onclick="return confirm('Are you want to delete?')"
+                                            <button onclick="return confirmUserDelete()"
                                                 class="btn btn-danger btn-sm" type="submit">Delete</button>
                                         </form>
                                     </td>
@@ -77,4 +80,14 @@
     </div>
 @endsection
 
+@section('scripts')
+    <script>
+        function confirmUserDelete() {
+            return confirm('Warning: Deleting this teacher will also delete all remedial lessons associated. This action cannot be undone. Are you sure you want to proceed?');
+        }
 
+        function confirmDeleteAll() {
+            return confirm('Are you sure you want to delete all attendances fo all teachers? This action cannot be undone.');
+        }
+    </script>
+@endsection
