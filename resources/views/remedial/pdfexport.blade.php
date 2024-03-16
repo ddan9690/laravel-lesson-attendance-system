@@ -121,8 +121,9 @@
 
     <p style="text-align: center; margin-top: 20px;">
         To view your lessons, please click this link to login:
-        <a href="https://remedial.apptempest.com/remedial/attendance/mylessons">View My Lessons</a>
+        <a href="https://remedial.apptempest.com/remedial/attendance/mylessons">https://remedial.apptempest.com/remedial/attendance/mylessons</a>
     </p>
+
 </body>
 
 </html>
