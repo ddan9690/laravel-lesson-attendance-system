@@ -77,6 +77,18 @@
             </div>
         </div>
     </div>
+
+    <!-- Display comments below the table -->
+    <div class="card mt-3">
+
+        <div class="card-body">
+            <ul style="list-style-type: none; padding-left: 0;">
+                @foreach($comments as $comment)
+                    <li style="color: red; font-size: small;">- {{ $comment->comment }}</li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
 @endsection
 
 @push('styles')
@@ -137,6 +149,3 @@
         });
     </script>
 @endsection
-
-
-

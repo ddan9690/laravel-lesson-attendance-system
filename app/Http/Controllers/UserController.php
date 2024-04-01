@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\Week;
+use App\Models\Comment;
 use App\Models\Attendance;
 use Illuminate\Http\Request;
 use App\Mail\RegistrationMail;
@@ -147,16 +148,26 @@ class UserController extends Controller
     }
 
     public function userweekly($week)
-    {
-        $user = Auth::user();
-        $week = Week::where('week_number', $week)->firstOrFail();
-        $attendances = Attendance::where('user_id', $user->id)
-            ->where('week_id', $week->id)
-            ->with('form', 'subject', 'lesson')
-            ->orderBy('created_at')
-            ->get();
-        return view('remedial.pages.attendances.user.weekdetails', compact('user', 'week', 'attendances'));
-    }
+{
+    $user = Auth::user();
+    $week = Week::where('week_number', $week)->firstOrFail();
+
+    // Retrieve attendances for the user and week
+    $attendances = Attendance::where('user_id', $user->id)
+        ->where('week_id', $week->id)
+        ->with('form', 'subject', 'lesson')
+        ->orderBy('created_at')
+        ->get();
+
+    // Retrieve comments for the user and week
+    $comments = Comment::where('user_id', $user->id)
+        ->where('week_id', $week->id)
+        ->get();
+
+    // Pass user, week, attendances, and comments to the view
+    return view('remedial.pages.attendances.user.weekdetails', compact('user', 'week', 'attendances', 'comments'));
+}
+
 
 
 }
