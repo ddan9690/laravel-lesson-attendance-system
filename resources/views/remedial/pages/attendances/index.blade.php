@@ -6,10 +6,9 @@
     @can('admin')
     <h5 class="card-header">
         <span>
-
             <a href="{{ route('pdfexport') }}" class="btn btn-success btn-sm">Summary PDF</a>
-            <a href="{{ route('finalreport') }}" class="btn btn-info btn-sm">Detailed PDF</a> <!-- Added button -->
-            <a href="{{ route('payment-schedule') }}" class="btn btn-primary btn-sm">Payment</a> <!-- Added button -->
+            <a href="{{ route('finalreport') }}" class="btn btn-info btn-sm">Detailed PDF</a>
+            <a href="{{ route('payment-schedule') }}" class="btn btn-primary btn-sm">Payment</a>
         </span>
     </h5>
     @endcan
@@ -34,5 +33,7 @@
             </tbody>
         </table>
     </div>
+    
+    <div style="text-align: center; font-weight: bold; color: red;">Total lessons: {{ $totalAttendances }}</div>
 </div>
 @endsection

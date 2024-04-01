@@ -15,12 +15,19 @@ class AttendanceController extends Controller
 
     public function index()
     {
-        $users = User::with('attendances')
-            ->orderBy('name', 'asc')
-            ->get();
+        // Get all users with their attendance records
+        $users = User::with('attendances')->orderBy('name', 'asc')->get();
 
-        return view('remedial.pages.attendances.index', ['users' => $users]);
+        // Calculate the total count of attendances
+        $totalAttendances = Attendance::count();
+
+        // Pass the users and total attendances to the view
+        return view('remedial.pages.attendances.index', [
+            'users' => $users,
+            'totalAttendances' => $totalAttendances,
+        ]);
     }
+
 
     public function create()
     {
