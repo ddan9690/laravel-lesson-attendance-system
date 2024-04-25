@@ -2,6 +2,15 @@
 @section('title', 'Attendance')
 
 @section('content')
+<style>
+    .table-sm td,
+    .table-sm th {
+        white-space: nowrap;
+        padding: 0.5rem;
+
+    }
+
+</style>
   <div class="col-12 mx-auto">
     <div class="card">
       @can('admin')
@@ -39,7 +48,6 @@
             </tr>
           </thead>
           <tbody class="table-border-bottom-0">
-            @php $sl = 0 @endphp
             @foreach ($users as $user)
               <tr>
                 <td>{{ $users->firstItem() + $loop->index }}</td>
@@ -67,28 +75,23 @@
             @endforeach
           </tbody>
         </table>
+
+        <div class="d-flex justify-content-center mt-2">
+            {{ $users->links() }}
+          </div>
       </div>
     </div>
   </div>
 @endsection
 
 @section('scripts')
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-  <script src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.min.js"></script>
-
   <script>
-    $(document).ready(function() {
-      $('#users-table').DataTable();
-    });
-
     function confirmUserDelete() {
       return confirm('Warning: Deleting this teacher will also delete all remedial lessons associated. This action cannot be undone. Are you sure you want to proceed?');
     }
 
     function confirmDeleteAll() {
-      return confirm('Are you sure you want to delete all attendances fo all teachers? This action cannot be undone.');
+      return confirm('Are you sure you want to delete all attendances for all teachers? This action cannot be undone.');
     }
   </script>
 @endsection
-
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.1/css/dataTables.bootstrap5.min.css">

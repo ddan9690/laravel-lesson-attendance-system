@@ -19,7 +19,7 @@ class UserController extends Controller
     {
 
         $users = User::orderBy('name', 'asc')
-            ->paginate(15);
+            ->paginate(25);
 
         return view('remedial.pages.users.index', compact('users'));
     }

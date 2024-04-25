@@ -3,6 +3,15 @@
 @section('title', 'Latest Attendance Records')
 
 @section('content')
+<style>
+    .table-sm td,
+    .table-sm th {
+        white-space: nowrap;
+        padding: 0.5rem;
+
+    }
+
+</style>
 <div class="col-md-8">
     <div class="card">
         <div class="card-header">
