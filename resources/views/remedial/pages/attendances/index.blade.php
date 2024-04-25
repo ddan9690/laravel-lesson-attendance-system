@@ -33,7 +33,12 @@
             </tbody>
         </table>
     </div>
-    
+
     <div style="text-align: center; font-weight: bold; color: red;">Total lessons: {{ $totalAttendances }}</div>
+
+    <!-- Link to view last 10 remedial entries -->
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ route('attendances.latestRecords') }}">View Last 10 Remedial Entries</a>
+    </div>
 </div>
 @endsection

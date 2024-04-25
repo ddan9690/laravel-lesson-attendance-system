@@ -121,6 +121,17 @@ public function exportToPDF()
         return $pdf->stream('remedial_notices.pdf');
     }
 
+    public function deleteAll()
+    {
+
+        Comment::truncate();
+
+
+        return redirect()->back()->with('success', 'All comments have been deleted successfully.');
+    }
+
+
+
 
 
 }

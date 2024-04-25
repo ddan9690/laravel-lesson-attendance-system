@@ -8,6 +8,8 @@
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">Add Comment</h3>
+                    <!-- Add a back link button -->
+                    <a href="{{ route('comment.index') }}" class="btn btn-sm btn-secondary">Back</a>
                 </div>
                 <div class="card-body">
                     @if (session('success'))

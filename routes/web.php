@@ -42,6 +42,9 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::post('/remedial/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/remedial/attendance/{user_id}/show', [AttendanceController::class, 'show'])->name('attendance.show');
 
+    // latest remedial entries
+    Route::get('/remedial/attendances/latest-records', [AttendanceController::class, 'latestRecords'])->name('attendances.latestRecords');
+
 
     Route::get('/remedial/classrecords', [AttendanceController::class, 'forms'])->name('attendance.classrecords');
     // Route::get('/remedial/classrecords/{id}/attendance/show', [FormController::class, 'classrecords'])->name('form.attendance.show');
@@ -88,5 +91,6 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/remedial/comments/{id}', [CommentController::class, 'update'])->name('comment.update');
     Route::delete('/remedial/comments/{id}', [CommentController::class, 'destroy'])->name('comment.destroy');
     Route::get('/remedial/comments/export-pdf', [CommentController::class, 'exportToPDF'])->name('exportToPDF');
+    Route::post('/remedial/comments/delete-all', [CommentController::class, 'deleteAll'])->name('comment.deleteAll');
 
 });

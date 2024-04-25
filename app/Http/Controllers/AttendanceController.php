@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attendance;
+use App\Models\Comment;
 use App\Models\Form;
+use App\Models\Lesson;
+use App\Models\Subject;
 use App\Models\User;
 use App\Models\Week;
-use App\Models\Lesson;
-use App\Models\Comment;
-use App\Models\Subject;
-use App\Models\Attendance;
 use Illuminate\Http\Request;
 
 class AttendanceController extends Controller
@@ -29,6 +29,18 @@ class AttendanceController extends Controller
         ]);
     }
 
+    public function latestRecords()
+    {
+        // Get the last 10 attendance records
+        $latestAttendances = Attendance::with('user')
+            ->orderBy('created_at', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('remedial.pages.attendances.latest-records', [
+            'latestAttendances' => $latestAttendances,
+        ]);
+    }
 
     public function create()
     {
@@ -150,7 +162,6 @@ class AttendanceController extends Controller
         return ['success' => true];
     }
 
-
     public function show($id)
     {
         $user = User::findOrFail($id);
@@ -161,21 +172,20 @@ class AttendanceController extends Controller
     }
 
     public function userweekly($week, $user_id)
-{
-    $user = User::findOrFail($user_id);
-    $week = Week::where('week_number', $week)->firstOrFail();
-    $attendances = Attendance::where('user_id', $user_id)
-        ->where('week_id', $week->id)
-        ->with('form', 'subject', 'lesson')
-        ->orderBy('created_at')
-        ->get();
+    {
+        $user = User::findOrFail($user_id);
+        $week = Week::where('week_number', $week)->firstOrFail();
+        $attendances = Attendance::where('user_id', $user_id)
+            ->where('week_id', $week->id)
+            ->with('form', 'subject', 'lesson')
+            ->orderBy('created_at')
+            ->get();
 
-    // Fetch all comments associated with the specified week
-    $comments = Comment::where('week_id', $week->id)->get();
+        // Fetch all comments associated with the specified week
+        $comments = Comment::where('week_id', $week->id)->get();
 
-    return view('remedial.pages.attendances.showusersperweek', compact('user', 'week', 'attendances', 'comments'));
-}
-
+        return view('remedial.pages.attendances.showusersperweek', compact('user', 'week', 'attendances', 'comments'));
+    }
 
     public function forms()
     {

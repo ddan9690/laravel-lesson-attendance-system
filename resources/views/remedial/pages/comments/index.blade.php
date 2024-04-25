@@ -23,8 +23,19 @@
                 @can('admin')
                 <a href="{{ route('comment.create') }}" class="btn mt-4 btn-primary btn-sm mx-1">New Comment</a>
                 @endcan
-                <a href="{{ route('exportToPDF') }}" class="btn mt-4  btn-success btn-sm mx-1">Download</a>
+                <a href="{{ route('exportToPDF') }}" class="btn mt-4 btn-success btn-sm mx-1">
+                    <i class="menu-icon tf-icons bx bxs-download"></i>
+                </a>
             </div>
+
+
+            <form action="{{ route('comment.deleteAll') }}" method="POST" class="d-inline">
+                @csrf
+                <button type="submit" class="btn btn-danger btn-sm"
+                    onclick="return confirmDeleteAll()">Delete All Notices for this Term</button>
+            </form>
+
+
         </div>
         <div class="table-responsive text-nowrap">
             <table class="table table-striped">
@@ -70,4 +81,14 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+    <script>
+
+
+        function confirmDeleteAll() {
+            return confirm('Are you sure you want to delete all notices for this term? This action cannot be undone.');
+        }
+    </script>
 @endsection
