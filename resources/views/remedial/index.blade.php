@@ -10,9 +10,9 @@
             <div class="alert alert-info text-center" role="alert">
                 <h5 class="alert-heading">{{ date('Y') }} Remedial Committee Members</h5>
                 <ul class="list-group">
-                    <li class="list-group-item">Mr. Rono </li>
-                    <li class="list-group-item">Mr. Jared Ouma</li>
-                    <li class="list-group-item">Mrs. Ruth Oketch</li>
+                    <li class="list-group-item">Mr. Obiri Domnic </li>
+                    <li class="list-group-item">Mrs Mary Matinde</li>
+                    {{-- <li class="list-group-item">Mrs. Ruth Oketch</li> --}}
                 </ul>
             </div>
         </div>
