@@ -18,16 +18,47 @@ class AttendanceController extends Controller
     {
         // Get all users with their attendance records
         $users = User::with('attendances')->orderBy('name', 'asc')->get();
-
+    
+        // Get all weeks from the Weeks model
+        $weeks = Week::all();
+    
         // Calculate the total count of attendances
         $totalAttendances = Attendance::count();
-
-        // Pass the users and total attendances to the view
+    
+        // Pass the users, weeks, and total attendances to the view
         return view('remedial.pages.attendances.index', [
             'users' => $users,
             'totalAttendances' => $totalAttendances,
+            'weeks' => $weeks,
         ]);
     }
+
+    public function showByWeek(Request $request)
+{
+    // Get the selected week ID from the request
+    $weekId = $request->input('week');
+    
+    // Get all users with their attendance records filtered by the selected week
+    $users = User::with(['attendances' => function($query) use ($weekId) {
+        $query->where('week_id', $weekId);
+    }])->orderBy('name', 'asc')->get();
+
+    // Get all weeks from the Weeks model
+    $weeks = Week::all();
+
+    // Calculate the total count of attendances for the selected week
+    $totalAttendances = Attendance::where('week_id', $weekId)->count();
+
+    // Pass the users, weeks, and total attendances to the view
+    return view('remedial.pages.attendances.showByWeek', [
+        'users' => $users,
+        'weeks' => $weeks,
+        'totalAttendances' => $totalAttendances,
+        'selectedWeek' => $weekId,
+    ]);
+}
+
+    
 
     public function latestRecords()
     {

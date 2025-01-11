@@ -9,6 +9,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\TeacherSubjectController;
 
 
 Route::get('/', function () {
@@ -37,10 +38,16 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::put('/remedial/users/{user}/update-role', [UserController::class, 'updateRole'])->name('users.updateRole');
     Route::get('/user/last-login', [UserController::class, 'lastLogin'])->name('user.lastLogin');
 
+    Route::post('/remedial/teacher-subjects', [TeacherSubjectController::class, 'store'])->name('teacher-subjects.store');
+
     Route::get('/remedial/attendances', [AttendanceController::class, 'index'])->name('attendance.index');
     Route::get('/remedial/attendance/create', [AttendanceController::class, 'create'])->name('attendance.create');
     Route::post('/remedial/attendance/store', [AttendanceController::class, 'store'])->name('attendance.store');
     Route::get('/remedial/attendance/{user_id}/show', [AttendanceController::class, 'show'])->name('attendance.show');
+
+    // Route to show attendance by selected week
+    Route::get('/remedial/attendance/week', [AttendanceController::class, 'showByWeek'])->name('attendance.showByWeek');
+
 
     // latest remedial entries
     Route::get('/remedial/attendances/latest-records', [AttendanceController::class, 'latestRecords'])->name('attendances.latestRecords');
@@ -72,6 +79,7 @@ Route::middleware(['auth', 'auth.Admin'])->group(function () {
     Route::get('/remedial/attendance/download', [AdminPDFExport::class, 'AllLessonCountExport'])->name('pdfexport');
     Route::get('/remedial/attendance/download/report', [AdminPDFExport::class, 'WeeklyAttendanceReportExport'])->name('finalreport');
     Route::get('/remedial/attendance/payment-schedule/download', [AdminPDFExport::class, 'PaymentSchedule'])->name('payment-schedule');
+    Route::get('/remedial/attendance/download/week/{weekId}', [AdminPDFExport::class, 'DownloadAttendanceForWeek'])->name('attendance.downloadPdf');
 
 });
 
