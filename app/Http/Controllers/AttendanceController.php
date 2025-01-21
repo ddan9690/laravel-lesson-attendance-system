@@ -118,6 +118,15 @@ class AttendanceController extends Controller
         $formId = $request->input('class');
         $subjectId = $request->input('subject');
         $weekId = $request->input('week');
+        $lessonId = $request->input('lesson'); // Capture the selected lesson
+    
+        // Retrieve the lesson name based on the lesson ID
+        $lessonName = Lesson::find($lessonId)->name ?? '';
+    
+        // Allow subjects Chemistry, Biology, and Physics for blocked classes if the lesson name is 'Practical'
+        if ($lessonName === 'Practical' && in_array(Subject::find($subjectId)->name, ['Chemistry', 'Biology', 'Physics'])) {
+            return ['success' => true]; // Bypass restrictions
+        }
     
         // Define classes with specific restrictions for Mathematics
         $classesWithMathRestrictions = [
@@ -160,7 +169,6 @@ class AttendanceController extends Controller
         elseif (in_array(Form::find($formId)->name, $classesWithWeeklyRestrictions) && in_array(Subject::find($subjectId)->name, $restrictedSubjects)) {
             return ['success' => false, 'message' => 'This subject cannot be added to a blocked class.'];
         }
-        
     
         // Check restrictions for Mathematics
         elseif (in_array(Form::find($formId)->name, $classesWithMathRestrictions) && Subject::find($subjectId)->name === 'Mathematics') {
@@ -200,6 +208,7 @@ class AttendanceController extends Controller
     
         return ['success' => true];
     }
+    
     
 
     public function show($id)
