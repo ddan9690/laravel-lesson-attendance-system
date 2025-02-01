@@ -115,10 +115,12 @@
                         <button class="btn btn-sm btn-primary d-grid w-100" type="submit">Log in</button>
                     </div>
                 </form>
-
-
-
-
+                <!-- Bukua -->
+                <div class="text-center">
+                  <p>Or</p>
+                  <a href="#" class="btn btn-sm btn-secondary d-grid w-100">Login with Bukua</a>
+                </div>
+              <!-- /Bukua -->
             </div>
           </div>
           <!-- /Register -->
