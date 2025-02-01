@@ -29,6 +29,11 @@ class User extends Authenticatable
         'password',
         'role',
         'last_login',
+        // Bukua
+        'bukua_user_id',
+         'bukua_access_token',
+         'bukua_refresh_token',
+         // Bukua
     ];
 
     /**

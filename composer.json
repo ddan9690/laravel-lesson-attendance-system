@@ -67,6 +67,12 @@
             "php-http/discovery": true
         }
     },
+    "repositories": [
+       {
+        "type": "path",
+        "url": "packages/bukua-auth-main"
+        }
+    ],
     "minimum-stability": "stable",
     "prefer-stable": true
 }
