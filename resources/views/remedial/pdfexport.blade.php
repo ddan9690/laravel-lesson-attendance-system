@@ -86,6 +86,22 @@
             text-transform: uppercase;
             margin-top: 10px;
         }
+
+        a {
+        font-size: 18px;  
+        font-weight: bold;
+        color: #007bff;
+        text-decoration: none; 
+        padding: 5px 10px; 
+        border-radius: 4px; 
+        background-color: #f8f9fa; 
+        transition: background-color 0.3s ease; 
+    }
+
+    a:hover {
+        background-color: #e2e6ea; 
+        text-decoration: underline; 
+    }
     </style>
 </head>
 

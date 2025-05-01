@@ -11,16 +11,14 @@
                             {{ session('success') }}
                         </div>
                     @endif
-                    <div class="card-header">Add new Attendance Record</div>
+                    <div class="card-header fw-bold">Add new Attendance Record</div>
 
                     <div class="card-body">
-
                         <form id="create_attendance">
                             @csrf
                             <div>
-                                <label for="smallSelect" class="form-label">Teacher</label>
-                                <select id="selectteacher" name="teacher" required
-                                    class="form-select selectteacher form-select-sm">
+                                <label for="selectteacher" class="form-label fw-bold">Teacher</label>
+                                <select id="selectteacher" name="teacher" required class="form-select selectteacher form-select-sm">
                                     <option>Select Teacher</option>
                                     @foreach ($teachers as $teacher)
                                         <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
@@ -34,7 +32,7 @@
                             </div>
 
                             <div>
-                                <label for="smallSelect" class="form-label">Class</label>
+                                <label for="smallSelect" class="form-label fw-bold">Class</label>
                                 <select id="smallSelect" name="class" class="form-select selectclass form-select-sm">
                                     <option>Select Class</option>
                                     @foreach ($forms as $form)
@@ -49,7 +47,7 @@
                             </div>
 
                             <div>
-                                <label for="smallSelect" class="form-label">Subject</label>
+                                <label for="smallSelect" class="form-label fw-bold">Subject</label>
                                 <select id="smallSelect" name="subject" class="form-select form-select-sm">
                                     <option>Select Subject</option>
                                     @foreach ($subjects as $subject)
@@ -64,7 +62,7 @@
                             </div>
 
                             <div>
-                                <label for="smallSelect" class="form-label">Lesson</label>
+                                <label for="smallSelect" class="form-label fw-bold">Lesson</label>
                                 <select id="smallSelect" name="lesson" class="form-select form-select-sm">
                                     <option>Select Lesson</option>
                                     @foreach ($lessons as $lesson)
@@ -77,8 +75,6 @@
                                         @endif
                                     @endforeach
                                 </select>
-                                
-
 
                                 @error('lesson')
                                     <span class="invalid-feedback" role="alert">
@@ -88,7 +84,7 @@
                             </div>
 
                             <div>
-                                <label for="smallSelect" class="form-label">Week</label>
+                                <label for="smallSelect" class="form-label fw-bold">Week</label>
                                 <select id="smallSelect" name="week" class="form-select form-select-sm">
                                     <option>Select Week</option>
                                     @foreach ($weeks as $week)
@@ -102,12 +98,6 @@
                                 @enderror
                             </div>
 
-                            <div class="form-check mt-3">
-                                <input class="form-check-input" name="status" type="checkbox" value=""
-                                    id="status" />
-                                <label class="form-check-label" for="defaultCheck1"> Make-Up </label>
-                            </div>
-
                             <button type="submit" class="btn btn-sm btn-primary mt-3">Save</button>
                         </form>
 
@@ -118,22 +108,17 @@
     </div>
 @endsection
 
-<!-- Your existing HTML code -->
-
 @section('scripts')
     <script>
         $(document).ready(function() {
-
             $('.selectteacher').select2();
             $('.selectclass').select2();
 
             var form = $("#create_attendance");
-            var submitBtn = form.find("button[type=submit]"); // Get the submit button
+            var submitBtn = form.find("button[type=submit]");
 
             form.on("submit", function(event) {
                 event.preventDefault();
-
-                // Disable the submit button while the form is being submitted
                 submitBtn.prop('disabled', true);
 
                 var data = $(this).serialize();
@@ -142,7 +127,6 @@
                     type: "POST",
                     data: data,
                     success: function(response) {
-                        // Re-enable the submit button after the form is successfully submitted
                         submitBtn.prop('disabled', false);
 
                         if (response.success) {
@@ -164,10 +148,7 @@
                         }
                     },
                     error: function(error) {
-                        // Re-enable the submit button if there's an error
                         submitBtn.prop('disabled', false);
-
-                        // Handle the error response
                         console.log(error);
                     }
                 })

@@ -36,7 +36,8 @@
                                         @elseif ($attendance->lesson->name === 'Evening')
                                             6:30-7:30 pm
                                         @else
-                                            {{ $attendance->lesson->start }} - {{ $attendance->lesson->end }}
+                                        {{ \Carbon\Carbon::parse($attendance->lesson->start)->format('g:i a') }} - {{ \Carbon\Carbon::parse($attendance->lesson->end)->format('g:i a') }}
+
                                         @endif
                                     @elseif ($attendance->lesson->name === 'Practical')
                                         Practical
