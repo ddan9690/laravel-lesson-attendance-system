@@ -70,7 +70,7 @@
                                     @foreach ($lessons as $lesson)
                                         @if ($lesson->name === 'Practical')
                                             <option value="{{ $lesson->id }}">Practical</option>
-                                        @elseif (in_array($lesson->name, ['L1', 'L2', 'L3']))
+                                        @elseif (in_array($lesson->name, ['Morning', 'Evening']))
                                             <option value="{{ $lesson->id }}">
                                                 {{ strtoupper($lesson->name) }} ( {{ \Carbon\Carbon::parse($lesson->start)->format('g:i a') }} - {{ \Carbon\Carbon::parse($lesson->end)->format('g:i a') }} )
                                             </option>
