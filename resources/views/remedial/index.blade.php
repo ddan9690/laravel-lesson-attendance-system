@@ -12,7 +12,7 @@
                 <ul class="list-group">
                     <li class="list-group-item">Mr. Obiri Domnic </li>
                     <li class="list-group-item">Mrs Mary Matinde</li>
-                    {{-- <li class="list-group-item">Mrs. Ruth Oketch</li> --}}
+                    <li class="list-group-item">Mr. Philip Odhiambo</li>
                 </ul>
             </div>
         </div>
