@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "89d1d013a57ec9c29819f3ab18ec78c1",
+    "content-hash": "990ce075165f5eda51f92b7ad2086791",
     "packages": [
         {
             "name": "barryvdh/laravel-dompdf",
@@ -3986,6 +3986,46 @@
                 }
             ],
             "time": "2024-04-27T21:32:50+00:00"
+        },
+        {
+            "name": "rango-tech/bukua-auth",
+            "version": "2.0.0",
+            "dist": {
+                "type": "path",
+                "url": "packages/bukua-auth-main",
+                "reference": "68bcc7c4588e42f47552f60f76c3f53972017592"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "BukuaAuth\\Providers\\BukuaAuthServiceProvider",
+                        "BukuaAuth\\Providers\\BukuaAuthEventServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "BukuaAuth\\": "src/"
+                }
+            },
+            "authors": [
+                {
+                    "name": "emmanuel mwita",
+                    "email": "emmanuelthemwitah@gmail.com",
+                    "role": "developer"
+                },
+                {
+                    "name": "dennis mayeku",
+                    "email": "dennismayeku@gmail.com",
+                    "role": "developer"
+                }
+            ],
+            "description": "Login with Bukua for your Laravel application",
+            "homepage": "https://bukuaplatform.com",
+            "transport-options": {
+                "relative": true
+            }
         },
         {
             "name": "realrashid/sweet-alert",
@@ -9147,12 +9187,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.1"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }

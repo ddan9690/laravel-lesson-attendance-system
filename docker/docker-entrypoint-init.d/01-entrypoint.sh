@@ -8,6 +8,7 @@ role=${CONTAINER_ROLE:-app}
 env=${APP_ENV:-production}
  
 composer install --no-dev --no-interaction --optimize-autoloader
+php artisan optimize
 
 if [ "$env" != "local" ]; then
     echo "Caching configuration..."
