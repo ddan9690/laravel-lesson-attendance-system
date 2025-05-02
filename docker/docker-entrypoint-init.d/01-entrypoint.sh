@@ -15,7 +15,7 @@ if [ "$env" != "local" ]; then
 fi
  
 if [ "$role" = "app" ]; then
-    echo "Running octane..."
+    echo "Running octane ..."
     
     # Run only once
 
