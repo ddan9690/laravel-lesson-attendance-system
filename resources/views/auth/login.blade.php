@@ -119,11 +119,11 @@
                 <div class="text-center">
                   <p>Or</p>
                   @if (Route::has('bukua-auth.authorize'))
-    <form action="{{ route('bukua-auth.authorize') }}" method="POST">
-        @csrf
-        <button type="submit" class="btn btn-sm btn-secondary d-grid w-100">Login with Bukua</button>
-    </form>
-    @endif
+                    <form action="{{ route('bukua-auth.authorize') }}" method="POST">
+                        @csrf
+                        <button type="submit" class="btn btn-sm btn-secondary d-grid w-100">Login with Bukua</button>
+                    </form>
+                  @endif
                 </div>
               <!-- /Bukua -->
             </div>
