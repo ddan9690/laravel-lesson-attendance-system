@@ -115,7 +115,7 @@
                         <button class="btn btn-sm btn-primary d-grid w-100" type="submit">Log in</button>
                     </div>
                 </form>
-                <!-- Bukua -->
+                <!-- Bukua. -->
                 <div class="text-center">
                   <p>Or</p>
                   @if (Route::has('bukua-auth.authorize'))
