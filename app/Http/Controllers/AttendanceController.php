@@ -114,79 +114,97 @@ class AttendanceController extends Controller
     }
 
     private function checkRestrictions(Request $request)
-    {
-        $formId = $request->input('class');
-        $subjectId = $request->input('subject');
-        $weekId = $request->input('week');
-        $lessonId = $request->input('lesson'); // Capture the selected lesson
-    
-        $lessonName = Lesson::find($lessonId)->name ?? '';
-    
-        if ($lessonName === 'Practical' && in_array(Subject::find($subjectId)->name, ['Chemistry', 'Biology', 'Physics'])) {
-            return ['success' => true];
+{
+    $formId = $request->input('class');
+    $subjectId = $request->input('subject');
+    $weekId = $request->input('week');
+    $lessonId = $request->input('lesson');
+    $userId = $request->input('teacher');
+
+    $form = Form::find($formId);
+    $subject = Subject::find($subjectId);
+    $lesson = Lesson::find($lessonId);
+
+    $formName = $form->name ?? '';
+    $subjectName = $subject->name ?? '';
+    $lessonName = $lesson->name ?? '';
+
+    // Define sets
+    $blockedForms = ['Form 2', 'Form 3', 'Form 4'];
+    $classesWithExcludedSubjects = [
+        '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
+        '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl', 
+        '4 Diamond', '4 Emerald', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
+    ];
+    $excludedSubjects = ['Agriculture', 'Business', 'Computer', 'CRE', 'French', 'Geography', 'History', 'Home Science', 'Physics'];
+    $restrictedSubjects = ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry'];
+    $classesWithMaxOneRemedial = $classesWithExcludedSubjects;
+    $classesWithWeeklyRestrictions = $blockedForms;
+    $blockSubjectsWithWeeklyMax = $excludedSubjects; // these get a max of 4
+    $practicalSubjects = ['Chemistry', 'Biology', 'Computer', 'Physics', 'Home Science'];
+
+    // 🔒 Practical Restriction (teacher-specific)
+    if (
+        $lessonName === 'Practical' &&
+        in_array($subjectName, $practicalSubjects) &&
+        in_array($formName, $blockedForms)
+    ) {
+        $practicalCount = Attendance::where('user_id', $userId)
+            ->where('week_id', $weekId)
+            ->whereHas('lesson', function ($query) {
+                $query->where('name', 'Practical');
+            })
+            ->count();
+
+        if ($practicalCount >= 2) {
+            return ['success' => false, 'message' => 'Each teacher can only record a maximum of 2 Practical lessons per week.'];
         }
-    
-        $classesWithMathRestrictions = [
-            '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
-            '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl', 
-            '4 Diamond', '4 Emerald', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
-        ];
-    
-        $classesWithMaxOneRemedial = [
-            '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
-            '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl',
-            '4 Diamond', '4 Emerald', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
-        ];
-    
-        $classesWithExcludedSubjects = [
-            '2 Diamond', '2 Emerald', '2 Gold', '2 Pearl',
-            '3 Diamond', '3 Emerald', '3 Gold', '3 Pearl', 
-            '4 Diamond', '4 Emerald', '4 Gold', '4 Pearl', '4 Sapphire', '4 Topaz',
-        ];
-    
-        $excludedSubjects = ['Agriculture', 'Business', 'Computer', 'CRE', 'French', 'Geography', 'History', 'Home Science', 'Physics'];
-    
-        $classesWithWeeklyRestrictions = [
-            'Form 2', 'Form 3', 'Form 4',
-        ];
-    
-        $restrictedSubjects = ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry'];
-    
-        if (in_array(Form::find($formId)->name, $classesWithExcludedSubjects) && in_array(Subject::find($subjectId)->name, $excludedSubjects)) {
-            return ['success' => false, 'message' => 'Block subject cannot be recorded to a single stream. Please select a block class.'];
-        } elseif (in_array(Form::find($formId)->name, $classesWithWeeklyRestrictions) && in_array(Subject::find($subjectId)->name, $restrictedSubjects)) {
-            return ['success' => false, 'message' => 'This subject cannot be added to a blocked class.'];
-        } elseif (in_array(Form::find($formId)->name, $classesWithMathRestrictions) && in_array(Subject::find($subjectId)->name, ['Mathematics', 'English', 'Biology', 'Chemistry'])) {
-            $attendanceCountForSubject = Attendance::where('form_id', $formId)
-                ->where('subject_id', $subjectId)
-                ->where('week_id', $weekId)
-                ->count();
-    
-            if ($attendanceCountForSubject >= 2) {
-                return ['success' => false, 'message' => 'Mathematics, English, Biology, and Chemistry can have a maximum of 2 lessons per week.'];
-            }
-        } elseif (in_array(Form::find($formId)->name, $classesWithMaxOneRemedial)) {
-            $attendanceCountForOtherSubjects = Attendance::where('form_id', $formId)
-                ->where('subject_id', $subjectId)
-                ->where('week_id', $weekId)
-                ->count();
-    
-            if ($attendanceCountForOtherSubjects >= 1) {
-                return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial per week for the selected subject.'];
-            }
-        } elseif (in_array(Form::find($formId)->name, $classesWithWeeklyRestrictions) && in_array(Subject::find($subjectId)->name, ['Agriculture', 'Business', 'Computer', 'CRE', 'French', 'Geography', 'History', 'Home Science', 'Physics'])) {
-            $attendanceCountForWeeklyRestrictions = Attendance::where('form_id', $formId)
-                ->where('subject_id', $subjectId)
-                ->where('week_id', $weekId)
-                ->count();
-    
-            if ($attendanceCountForWeeklyRestrictions >= 3) {
-                return ['success' => false, 'message' => 'Maximum teachers reached for this block subject in the selected class.'];
-            }
-        }
-    
+
         return ['success' => true];
     }
+
+    // ✅ Allow Practical for blocked classes with eligible subjects
+    if ($lessonName === 'Practical' && in_array($subjectName, $practicalSubjects)) {
+        return ['success' => false, 'message' => 'Practical lessons for this subject can only be recorded for blocked classes (Form 2–4).'];
+    }
+
+    // ❌ Blocked Subject Restriction for Single Classes
+    if (in_array($formName, $classesWithExcludedSubjects) && in_array($subjectName, $excludedSubjects)) {
+        return ['success' => false, 'message' => 'This block subject cannot be recorded for a single-stream class. Please select a block class.'];
+    }
+
+    // ❌ Restricted Subjects in Blocked Classes
+    if (in_array($formName, $classesWithWeeklyRestrictions) && in_array($subjectName, $restrictedSubjects)) {
+        return ['success' => false, 'message' => 'This subject cannot be added to a blocked class.'];
+    }
+
+    // ❌ Max 4 lessons per week for block subjects
+    if (in_array($formName, $blockedForms) && in_array($subjectName, $blockSubjectsWithWeeklyMax)) {
+        $weeklyCount = Attendance::where('form_id', $formId)
+            ->where('subject_id', $subjectId)
+            ->where('week_id', $weekId)
+            ->count();
+
+        if ($weeklyCount >= 4) {
+            return ['success' => false, 'message' => 'This subject can have a maximum of 4 lessons per week in this block class.'];
+        }
+    }
+
+    // ❌ Max 1 remedial per week for non-block subjects
+    if (in_array($formName, $classesWithMaxOneRemedial)) {
+        $weeklyCount = Attendance::where('form_id', $formId)
+            ->where('subject_id', $subjectId)
+            ->where('week_id', $weekId)
+            ->count();
+
+        if ($weeklyCount >= 1) {
+            return ['success' => false, 'message' => 'This class can have a maximum of 1 remedial per week for the selected subject.'];
+        }
+    }
+
+    return ['success' => true];
+}
+
 
     
     

@@ -86,7 +86,7 @@
             text-transform: uppercase;
             margin-top: 10px;
         }
-
+/* 
         a {
         font-size: 18px;  
         font-weight: bold;
@@ -101,7 +101,7 @@
     a:hover {
         background-color: #e2e6ea; 
         text-decoration: underline; 
-    }
+    } */
     </style>
 </head>
 
