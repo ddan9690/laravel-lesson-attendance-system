@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests\Auth;
 
+use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cookie;
-use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
@@ -29,7 +29,10 @@ class LoginRequest extends FormRequest
             ->redirectTo($this->getRedirectUrl());
     }
 
-    public function authenticate(): void
+    /**
+     * Authenticate the user and return role-based redirect route.
+     */
+    public function authenticate(): string
     {
         $credentials = $this->only('login', 'password');
         $remember = $this->filled('remember');
@@ -42,17 +45,42 @@ class LoginRequest extends FormRequest
             ])->redirectTo($this->getRedirectUrl());
         }
 
+        $user = Auth::user();
+
+        // Handle remember-me cookie
         if ($remember) {
             $this->setRememberMeCookie();
         } else {
             $this->deleteRememberMeCookie();
         }
+
+        // Role-based redirection
+        $roleRoutes = [
+            'super_admin'     => 'dashboard.admin',
+            'principal'       => 'dashboard.admin',
+            'deputy'          => 'dashboard.admin',
+            'dos'             => 'dashboard.admin',
+            'senior_teacher'  => 'dashboard.admin',
+            'committee_member'=> 'dashboard.committee',
+            'class_supervisor'=> 'dashboard.class_supervisor',
+            'class_teacher'   => 'dashboard.class_teacher',
+            'teacher'         => 'dashboard.teacher',
+        ];
+
+        foreach ($roleRoutes as $role => $route) {
+            if ($user->hasRole($role)) {
+                return route($route);
+            }
+        }
+
+        // fallback
+        return route('home');
     }
 
     private function setRememberMeCookie(): void
     {
         $rememberToken = Auth::user()->getRememberToken();
-        Cookie::queue('remember_me', $rememberToken, 43200); // Remember Me cookie for 30 days
+        Cookie::queue('remember_me', $rememberToken, 43200); // 30 days
     }
 
     private function deleteRememberMeCookie(): void

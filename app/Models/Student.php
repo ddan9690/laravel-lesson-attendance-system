@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
-use App\Models\Clazz;
-use App\Models\Stream;
-use App\Models\StudentSubject;
+use App\Models\Term;
+use App\Models\User;
+use App\Models\Grade;
+use App\Models\GradeStream;
+use App\Models\AcademicYear;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -15,30 +17,52 @@ class Student extends Model
     protected $fillable = [
         'name',
         'adm',
-        'clazz_id',
-        'stream_id',
+        'phone',
+        'grade_id',
+        'grade_stream_id',
+        'status',
+        'joined_academic_year_id',
+        'joined_term_id',
+        'left_academic_year_id',
+        'left_term_id',
+        'graduation_year',
+        'added_by',
     ];
 
-    public function clazz()
+     public function grade()
     {
-        return $this->belongsTo(Clazz::class, 'clazz_id');
+        return $this->belongsTo(Grade::class);
     }
 
-    public function stream()
+    public function gradeStream()
     {
-        return $this->belongsTo(Stream::class, 'stream_id');
+        return $this->belongsTo(GradeStream::class);
     }
 
-    public function subjects()
+   public function joinedAcademicYear()
     {
-        return $this->belongsToMany(Subject::class, 'studentsubjects', 'student_id', 'subject_id');
+        return $this->belongsTo(AcademicYear::class, 'joined_academic_year_id');
     }
 
-    public function studentsubjects()
+    public function joinedTerm()
     {
-        return $this->hasMany(StudentSubject::class);
+        return $this->belongsTo(Term::class, 'joined_term_id');
     }
 
+    public function leftAcademicYear()
+    {
+        return $this->belongsTo(AcademicYear::class, 'left_academic_year_id');
+    }
 
+    public function leftTerm()
+    {
+        return $this->belongsTo(Term::class, 'left_term_id');
+    }
 
+    public function addedBy()
+    {
+        return $this->belongsTo(User::class, 'added_by');
+    }
+
+    
 }

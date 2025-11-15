@@ -1,17 +1,23 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
-        </h2>
-    </x-slot>
+@extends('layouts.app')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    {{ __("You're logged in!") }}
-                </div>
-            </div>
-        </div>
+@section('title', 'Dashboard')
+
+@section('content')
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Card Example -->
+    <div class="bg-card shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-school-green">Total Students</h3>
+        <p class="text-3xl font-bold mt-2">1,204</p>
     </div>
-</x-app-layout>
+
+    <div class="bg-card shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-school-green">Fees Collected</h3>
+        <p class="text-3xl font-bold mt-2">KSh 3.2M</p>
+    </div>
+
+    <div class="bg-card shadow rounded-xl p-6">
+        <h3 class="text-lg font-semibold text-school-green">Active Staff</h3>
+        <p class="text-3xl font-bold mt-2">56</p>
+    </div>
+</div>
+@endsection
