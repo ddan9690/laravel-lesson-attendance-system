@@ -4,84 +4,104 @@
 
 @section('content')
 <div class="p-6">
-    <!-- Admin Area Header -->
-    <h1 class="text-3xl font-bold text-white mb-6">
-        Super Admin Dashboard
-    </h1>
 
-    <!-- Welcome Section -->
-    <div class="bg-white text-gray-800 rounded-2xl shadow p-6 mb-6">
-        <p class="text-gray-600">
-            Welcome, <span class="font-bold text-green-700">Administrator</span>!
-        </p>
-        <p class="mt-2">
-            You have full authority to manage teachers, classes, remedial committees, subjects, and system settings.
-        </p>
-    </div>
-
-    <!-- Dashboard Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Teachers Card -->
-        <div class="bg-green-100 rounded-2xl shadow p-6">
-            <h2 class="text-xl font-semibold mb-3">Teachers</h2>
-            <p class="text-gray-700 mb-4">Manage all school teachers. Add, edit, or remove teacher accounts.</p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-                <li>John Doe</li>
-                <li>Mary Wanjiru</li>
-                <li>David Obiero</li>
-            </ul>
-            <button class="bg-green-700 text-white px-4 py-2 rounded hover:bg-green-800">Manage Teachers</button>
-        </div>
-
-        <!-- Classes Card -->
+    <!-- Payment Cards Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- Total Collected This Term -->
         <div class="bg-blue-100 rounded-2xl shadow p-6">
-            <h2 class="text-xl font-semibold mb-3">Classes</h2>
-            <p class="text-gray-700 mb-4">Manage school classes, assign teachers, and track students.</p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-                <li>Form 1A</li>
-                <li>Form 2B</li>
-                <li>Form 3C</li>
-            </ul>
-            <button class="bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">Manage Classes</button>
+            <h2 class="text-xl font-semibold mb-2">Total Collected This Term</h2>
+            <p class="text-gray-700 text-2xl font-bold">{{ number_format(1250000) }}</p>
+            <p class="text-gray-500 text-sm mt-1">From 750 students out of 1250</p>
+            <button class="mt-4 bg-blue-700 text-white px-4 py-2 rounded hover:bg-blue-800">Go to Payment Management</button>
         </div>
 
-        <!-- Subjects Card -->
+        <!-- Clearance Collections -->
+        <div class="bg-green-100 rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-2">Total Collection from Clearances</h2>
+            <p class="text-gray-700 text-2xl font-bold">{{ number_format(250000) }}</p>
+            <p class="text-gray-500 text-sm mt-1">Clearance payments for all students</p>
+        </div>
+
+        <!-- Lessons Management -->
         <div class="bg-yellow-100 rounded-2xl shadow p-6">
-            <h2 class="text-xl font-semibold mb-3">Subjects</h2>
-            <p class="text-gray-700 mb-4">Manage subjects, assign teachers, and create subject materials.</p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-                <li>Mathematics</li>
-                <li>English</li>
-                <li>Biology</li>
-            </ul>
-            <button class="bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800">Manage Subjects</button>
-        </div>
-
-        <!-- Remedial Committee Card -->
-        <div class="bg-purple-100 rounded-2xl shadow p-6">
-            <h2 class="text-xl font-semibold mb-3">Remedial Committee</h2>
-            <p class="text-gray-700 mb-4">Manage remedial programs and committee members.</p>
-            <ul class="list-disc list-inside text-gray-600 mb-4">
-                <li>Dominic Obiri</li>
-                <li>Ruth Oketch</li>
-                <li>Philip Odhiambo</li>
-            </ul>
-            <button class="bg-purple-700 text-white px-4 py-2 rounded hover:bg-purple-800">Manage Remedial</button>
-        </div>
-
-        <!-- Reports Card -->
-        <div class="bg-red-100 rounded-2xl shadow p-6">
-            <h2 class="text-xl font-semibold mb-3">Reports</h2>
-            <p class="text-gray-700 mb-4">View school reports and performance analytics.</p>
-            <button class="bg-red-700 text-white px-4 py-2 rounded hover:bg-red-800">View Reports</button>
-        </div>
-
-        <!-- System Settings Card -->
-        <div class="bg-gray-100 rounded-2xl shadow p-6">
-            <h2 class="text-xl font-semibold mb-3">System Settings</h2>
-            <p class="text-gray-700 mb-4">Configure system preferences and access controls.</p>
-            <button class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">Manage Settings</button>
+            <h2 class="text-xl font-semibold mb-2">Manage Lessons</h2>
+            <p class="text-gray-700 mb-4">Remedial lesson tracking and attendance management.</p>
+            <button class="bg-yellow-700 text-white px-4 py-2 rounded hover:bg-yellow-800">Go to Lesson Management</button>
         </div>
     </div>
+
+    <!-- Lessons Info Section -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+        <!-- 8-4-4 Attendance % -->
+        <div class="bg-purple-100 rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-2">8-4-4 Attendance</h2>
+            <p class="text-gray-700 text-2xl font-bold">87%</p>
+        </div>
+
+        <!-- CBC Attendance % -->
+        <div class="bg-pink-100 rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-2">CBC Attendance</h2>
+            <p class="text-gray-700 text-2xl font-bold">91%</p>
+        </div>
+
+        <!-- Lessons Missed This Week -->
+        <div class="bg-red-100 rounded-2xl shadow p-6">
+            <h2 class="text-xl font-semibold mb-2">Lessons Missed This Week</h2>
+            <p class="text-gray-700 text-2xl font-bold">12</p>
+        </div>
+    </div>
+
+    <!-- Payments Tables by Grade -->
+    @php
+        $grades = ['Grade 10', 'Grade 11', 'Grade 12'];
+        $streams = ['Diamond', 'Sapphire', 'Topaz', 'Emerald', 'Gold', 'Pearl'];
+    @endphp
+
+    @foreach($grades as $grade)
+        <div class="mb-10">
+            <h2 class="text-2xl font-bold text-gray-700 mb-4">{{ $grade }} Payments Overview</h2>
+
+            <!-- Grade Summary Card -->
+            <div class="bg-white shadow rounded p-4 mb-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">Total Collected</h3>
+                    <p class="text-gray-700 font-bold text-xl">{{ number_format(rand(200000,400000)) }}</p>
+                </div>
+                <div class="bg-green-50 p-4 rounded">
+                    <h3 class="text-lg font-semibold mb-2">Total Students Paid</h3>
+                    <p class="text-gray-700 font-bold text-xl">{{ rand(120,200) }} / 250</p>
+                </div>
+            </div>
+
+            <!-- Grade Payment Table -->
+            <div class="bg-white shadow rounded p-4 overflow-x-auto">
+                <table class="min-w-full table-auto text-sm">
+                    <thead class="bg-school-green text-white text-xs uppercase">
+                        <tr>
+                            <th class="py-2 px-3 text-left">Stream</th>
+                            <th class="py-2 px-3 text-left">Amount Collected</th>
+                            <th class="py-2 px-3 text-left">Students Paid</th>
+                            <th class="py-2 px-3 text-left">Class Teacher</th>
+                            <th class="py-2 px-3 text-left">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($streams as $stream)
+                            <tr class="border-b border-gray-200 even:bg-green-50 hover:bg-school-accent hover:text-white transition-colors">
+                                <td class="py-2 px-3">{{ $stream }}</td>
+                                <td class="py-2 px-3">{{ number_format(rand(30000,80000)) }}</td>
+                                <td class="py-2 px-3">{{ rand(20,50) }} / 50</td>
+                                <td class="py-2 px-3">John Doe</td>
+                                <td class="py-2 px-3">
+                                    <button class="bg-school-green text-white px-3 py-1 rounded hover:bg-green-800 text-xs">View Details</button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    @endforeach
+
 </div>
 @endsection
