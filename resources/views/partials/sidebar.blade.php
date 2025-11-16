@@ -12,8 +12,7 @@
     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
 
         <!-- Dashboard visible to all authenticated users -->
-        <a href="{{ route('dashboard.teacher') }}"
-            class="flex items-center px-3 py-2 rounded-lg hover:bg-green-700 transition">
+        <a href="{{ dashboard_route() }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-green-700 transition">
             <i class='bx bxs-dashboard mr-3 text-xl'></i> Dashboard
         </a>
 
