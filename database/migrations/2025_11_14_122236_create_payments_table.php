@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('grade_name')->nullable();
             $table->string('stream_name')->nullable();
             
-            $table->decimal('amount', 10, 2);
+             $table->integer('amount')->change();
             $table->enum('payment_type', ['cash', 'mpesa'])->default('mpesa');
             $table->string('mpesa_transaction_number')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();

@@ -15,6 +15,7 @@ return new class extends Migration
           $table->id();
             $table->string('name');
             $table->foreignId('curriculum_id')->constrained('curricula')->cascadeOnDelete();
+            $table->unsignedInteger('level')->default(0);
             $table->foreignId('class_supervisor_id')->nullable()->constrained('users')->nullOnDelete();
             $table->timestamps();
         });
