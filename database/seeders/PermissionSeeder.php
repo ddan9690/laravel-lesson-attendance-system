@@ -32,6 +32,9 @@ class PermissionSeeder extends Seeder
             'manage_forms',
             'manage_grades',
             'manage_streams',
+            'manage_classes',
+            'promote_students',
+            'import_students', 
 
             // Users & Roles
             'manage_users',
@@ -53,8 +56,8 @@ class PermissionSeeder extends Seeder
             switch ($role->name) {
                 case 'super_admin':
                     $role->syncPermissions([
-                        'manage_users',           
-                        'manage_roles',           
+                        'manage_users',
+                        'manage_roles',
                         'lesson_capture',
                         'lesson_view',
                         'lesson_edit',
@@ -64,9 +67,12 @@ class PermissionSeeder extends Seeder
                         'payment_edit',
                         'payment_delete',
                         'manage_curricula',
+                        'manage_classes',
+                        'import_students', 
                         'manage_forms',
                         'manage_grades',
                         'manage_streams',
+                        'promote_students',
                         'view_reports',
                     ]);
                     break;
@@ -85,8 +91,9 @@ class PermissionSeeder extends Seeder
                         'payment_view',
                         'payment_edit',
                         'payment_delete',
-                        'manage_users',               
+                        'manage_users',
                         'manage_curricula',
+                        'manage_classes',
                         'manage_forms',
                         'manage_grades',
                         'manage_streams',
@@ -99,8 +106,8 @@ class PermissionSeeder extends Seeder
                         'lesson_view',
                         'payment_view',
                         'view_reports',
-                        'manage_forms',   
-                        'manage_grades', 
+                        'manage_forms',
+                        'manage_grades',
                         'manage_streams',
                     ]);
                     break;

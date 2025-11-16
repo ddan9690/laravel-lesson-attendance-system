@@ -7,69 +7,54 @@ use Illuminate\Support\Facades\Auth;
 class DashboardController
 {
     /**
-     * Handle the landing page after login.
-     * Redirects user to their role-specific dashboard.
+     * Redirect user to their role-specific dashboard after login.
      */
     public function index()
     {
         $user = Auth::user();
 
-        // Role-based redirection (priority order)
-        if ($user->hasAnyRole(['super_admin', 'principal', 'deputy', 'dos', 'senior_teacher'])) {
-            return redirect()->route('dashboard.admin');
+        // Role → Route mapping
+        $map = [
+            // Admin-level group
+            ['roles' => ['super_admin', 'principal', 'deputy', 'dos', 'senior_teacher'], 'route' => 'dashboard.admin'],
+
+            // Committee
+            ['roles' => ['committee_member'], 'route' => 'dashboard.committee'],
+
+            // Class supervisors
+            ['roles' => ['class_supervisor'], 'route' => 'dashboard.class_supervisor'],
+
+            // Class teachers
+            ['roles' => ['class_teacher'], 'route' => 'dashboard.class_teacher'],
+
+            // Normal teacher
+            ['roles' => ['teacher'], 'route' => 'dashboard.teacher'],
+        ];
+
+       
+        foreach ($map as $item) {
+            if ($user->hasAnyRole($item['roles'])) {
+                return redirect()->route($item['route']);
+            }
         }
 
-        if ($user->hasRole('committee_member')) {
-            return redirect()->route('dashboard.committee');
-        }
-
-        if ($user->hasRole('class_supervisor')) {
-            return redirect()->route('dashboard.class_supervisor');
-        }
-
-        if ($user->hasRole('class_teacher')) {
-            return redirect()->route('dashboard.class_teacher');
-        }
-
-        if ($user->hasRole('teacher')) {
-            return redirect()->route('dashboard.teacher');
-        }
-
-        // fallback
+        // Fallback view (no role assigned)
         return view('home', compact('user'));
     }
 
-    // ========================================
+
+    // =======================
     // DASHBOARD VIEWS
-    // ========================================
+    // =======================
 
-    public function admin()
-    {
-        $user = Auth::user();
-        return view('dashboards.admin', compact('user'));
-    }
+    public function admin()         { return $this->view('dashboards.admin'); }
+    public function committee()     { return $this->view('dashboards.committee'); }
+    public function classSupervisor(){ return $this->view('dashboards.class_supervisor'); }
+    public function classTeacher()  { return $this->view('dashboards.class_teacher'); }
+    public function teacher()       { return $this->view('dashboards.teacher'); }
 
-    public function committee()
+    private function view($path)
     {
-        $user = Auth::user();
-        return view('dashboards.committee', compact('user'));
-    }
-
-    public function classSupervisor()
-    {
-        $user = Auth::user();
-        return view('dashboards.class_supervisor', compact('user'));
-    }
-
-    public function classTeacher()
-    {
-        $user = Auth::user();
-        return view('dashboards.class_teacher', compact('user'));
-    }
-
-    public function teacher()
-    {
-        $user = Auth::user();
-        return view('dashboards.teacher', compact('user'));
+        return view($path, ['user' => Auth::user()]);
     }
 }

@@ -1,151 +1,126 @@
 @extends('layouts.app')
 
-@section('title', 'Students in ' . $stream->name)
+@section('title', 'Teacher Dashboard')
 
 @section('content')
-<h1 class="text-2xl font-bold text-school-green mb-6">
-    Students in Stream: {{ $stream->name }}
-</h1>
 
-<p class="text-red-500 text-xs mb-6">
-    {{ $stream->id }}
-</p>
+    <h1 class="text-2xl font-bold text-school-green mb-6">
+        Teacher Dashboard
+    </h1>
 
-<div class="mb-4">
+    {{-- Weekly Missed Lessons Summary --}}
+    <div class="bg-white shadow rounded p-4 mb-6">
+        <h2 class="text-lg font-semibold text-school-green mb-2">Weekly Summary</h2>
 
-    @if ($type === 'grade')
-        <a href="{{ route('classes.streams.students.create', $stream->id) }}"
-            class="bg-school-green text-white px-4 py-2 rounded hover:bg-green-700">
-            + Add Student
-        </a>
+        <p class="text-gray-700 text-sm">
+            <span class="font-bold text-red-600 text-xl">3</span> lessons missed this week.
+        </p>
+    </div>
 
-        <a href="{{ route('admin.students.import.grade', $stream->id) }}"
-            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-2">
-            Import from Excel
-        </a>
-    @endif
+    {{-- 844 Curriculum --}}
+    <div class="bg-white shadow rounded p-4 mb-8 overflow-x-auto">
+        <h2 class="text-lg font-bold text-school-green mb-4">
+            844 Curriculum – Lesson Attendance
+        </h2>
 
-    <a href="{{ route('classes.streams.showStreams', ['type' => $type, 'id' => $item->id]) }}"
-        class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 ml-2">
-        Back to Streams
-    </a>
-</div>
+        <table class="datatable min-w-full border border-gray-200 table-auto whitespace-nowrap text-sm">
+            <thead class="bg-school-green text-white text-xs">
+                <tr>
+                    <th class="py-1 px-2 text-left">Subject</th>
+                    <th class="py-1 px-2 text-left">Date</th>
+                    <th class="py-1 px-2 text-left">Time</th>
+                    <th class="py-1 px-2 text-left">Status</th>
+                </tr>
+            </thead>
 
-@if ($type === 'grade')
-<div class="bg-white shadow rounded p-4 overflow-x-auto">
+            <tbody>
 
-    {{-- Updated table with DataTables --}}
-    <table class="datatable min-w-full border border-gray-200 table-auto whitespace-nowrap text-sm">
-        <thead class="bg-school-green text-white text-xs">
-            <tr>
-                <th class="py-1 px-2 text-left w-6">#</th>
-                <th class="py-1 px-2 text-left w-20">ADM</th>
-                <th class="py-1 px-2 text-left">Name</th>
-                <th class="py-1 px-2 text-left">Phone</th>
+                {{-- Attended --}}
+                <tr class="border-t text-xs">
+                    <td class="py-1 px-2">Mathematics</td>
+                    <td class="py-1 px-2">10/11/25</td>
+                    <td class="py-1 px-2">8:00am - 9:00am</td>
+                    <td class="py-1 px-2">
+                        <span class="text-green-600 text-xl">✔</span>
+                    </td>
+                </tr>
 
-                {{-- NEW Columns --}}
-                <th class="py-1 px-2 text-left">Year Joined</th>
-                <th class="py-1 px-2 text-left">Term Joined</th>
+                {{-- Missed --}}
+                <tr class="border-t text-xs">
+                    <td class="py-1 px-2">English</td>
+                    <td class="py-1 px-2">11/11/25</td>
+                    <td class="py-1 px-2">10:00am - 11:00am</td>
+                    <td class="py-1 px-2">
+                        <span class="text-red-600 text-xl">✘</span>
+                    </td>
+                </tr>
 
-                <th class="py-1 px-2 w-32">Actions</th>
-            </tr>
-        </thead>
+                {{-- Make-up --}}
+                <tr class="border-t text-xs">
+                    <td class="py-1 px-2">Kiswahili</td>
+                    <td class="py-1 px-2">11/11/25</td>
+                    <td class="py-1 px-2">2:00pm - 3:00pm</td>
+                    <td class="py-1 px-2">
+                        <span class="text-green-600 text-xl">✔</span>
+                        <span class="text-red-600 text-[10px]">(make up)</span>
+                    </td>
+                </tr>
 
-        <tbody>
-            @forelse($students as $index => $student)
-            <tr class="border-t text-xs">
-                <td class="py-1 px-2">{{ $index + 1 }}</td>
-                <td class="py-1 px-2">{{ $student->adm }}</td>
-                <td class="py-1 px-2">{{ $student->name }}</td>
-                <td class="py-1 px-2">{{ $student->phone ?? 'N/A' }}</td>
+            </tbody>
+        </table>
+    </div>
 
-                {{-- NEW Data --}}
-                <td class="py-1 px-2">
-                    {{ $student->joinedAcademicYear->year ?? 'N/A' }}
-                </td>
+    {{-- CBC Curriculum --}}
+    <div class="bg-white shadow rounded p-4 overflow-x-auto">
+        <h2 class="text-lg font-bold text-school-green mb-4">
+            CBC Curriculum – Learning Areas Attendance
+        </h2>
 
-                <td class="py-1 px-2">
-                    {{ $student->joinedTerm->name ?? 'N/A' }}
-                </td>
+        <table class="datatable min-w-full border border-gray-200 table-auto whitespace-nowrap text-sm">
+            <thead class="bg-school-green text-white text-xs">
+                <tr>
+                    <th class="py-1 px-2 text-left">Learning Area</th>
+                    <th class="py-1 px-2 text-left">Date</th>
+                    <th class="py-1 px-2 text-left">Time</th>
+                    <th class="py-1 px-2 text-left">Status</th>
+                </tr>
+            </thead>
 
-                <td class="py-1 px-2 whitespace-nowrap flex gap-1">
+            <tbody>
 
-                    {{-- Edit --}}
-                    <a href="{{ route('classes.streams.students.edit', $student->id) }}"
-                        class="bg-yellow-500 text-white px-2 py-1 rounded hover:bg-yellow-600 text-xs">
-                        Edit
-                    </a>
+                {{-- Missed --}}
+                <tr class="border-t text-xs">
+                    <td class="py-1 px-2">Environmental Activities</td>
+                    <td class="py-1 px-2">12/11/25</td>
+                    <td class="py-1 px-2">9:00am - 10:00am</td>
+                    <td class="py-1 px-2">
+                        <span class="text-red-600 text-xl">✘</span>
+                    </td>
+                </tr>
 
-                    {{-- Delete --}}
-                    <button @click="confirmDelete({{ $student->id }})"
-                        class="bg-red-600 text-white px-2 py-1 rounded hover:bg-red-700 text-xs">
-                        Delete
-                    </button>
-                </td>
-            </tr>
-            @empty
-            <tr>
-                <td colspan="7" class="py-2 px-2 text-center text-gray-500 text-xs">
-                    No students found in this stream.
-                </td>
-            </tr>
-            @endforelse
-        </tbody>
-    </table>
+                {{-- Attended --}}
+                <tr class="border-t text-xs">
+                    <td class="py-1 px-2">Literacy</td>
+                    <td class="py-1 px-2">13/11/25</td>
+                    <td class="py-1 px-2">11:00am - 12:00pm</td>
+                    <td class="py-1 px-2">
+                        <span class="text-green-600 text-xl">✔</span>
+                    </td>
+                </tr>
 
-</div>
+                {{-- Make-up --}}
+                <tr class="border-t text-xs">
+                    <td class="py-1 px-2">Creative Activities</td>
+                    <td class="py-1 px-2">13/11/25</td>
+                    <td class="py-1 px-2">1:00pm - 2:00pm</td>
+                    <td class="py-1 px-2">
+                        <span class="text-green-600 text-xl">✔</span>
+                        <span class="text-red-600 text-[10px]">(make up)</span>
+                    </td>
+                </tr>
 
-{{-- Alpine + SweetAlert --}}
-<script>
-    function confirmDelete(studentId) {
-        Swal.fire({
-            title: 'Are you sure?',
-            text: "This will permanently delete the student!",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#e3342f',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Yes, delete!'
-        }).then((result) => {
+            </tbody>
+        </table>
+    </div>
 
-            if (result.isConfirmed) {
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = `/classes/stream/students/${studentId}`;
-
-                const csrfInput = document.createElement('input');
-                csrfInput.type = 'hidden';
-                csrfInput.name = '_token';
-                csrfInput.value = '{{ csrf_token() }}';
-                form.appendChild(csrfInput);
-
-                const methodInput = document.createElement('input');
-                methodInput.type = 'hidden';
-                methodInput.name = '_method';
-                methodInput.value = 'DELETE';
-                form.appendChild(methodInput);
-
-                document.body.appendChild(form);
-                form.submit();
-            }
-        })
-    }
-
-    @if(session('success'))
-    Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: '{{ session('success') }}',
-        timer: 2000,
-        showConfirmButton: false
-    });
-    @endif
-</script>
-
-@else
-<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">
-    <p class="font-semibold">Student Management Not Available</p>
-    <p>Student management is only available for CBC curriculum (Grades). This is an 8-4-4 Form which handles streams only.</p>
-</div>
-@endif
 @endsection
