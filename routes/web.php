@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\StreamController;
 use App\Http\Controllers\Admin\Pdf\PdfController;
 use App\Http\Controllers\Admin\StudentController;
@@ -137,6 +138,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('student/search', [PaymentsController::class, 'searchStudent'])->name('remedial.student.search');
         Route::get('student/{student}', [PaymentsController::class, 'studentProfile'])->name('remedial.student.profile');
+
+        Route::get('remedial/lessons', [LessonController::class, 'index'])->name('lessons.index');
     });
 
     // ======================================================

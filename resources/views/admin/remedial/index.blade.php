@@ -13,11 +13,11 @@
 
             {{-- Remedial Lessons (only for those who can capture lessons) --}}
             @can('lesson_capture')
-                <a href=""
-                    class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg shadow transition text-sm">
-                    Remedial Lessons
-                </a>
-            @endcan
+            <a href="{{ route('lessons.index') }}"
+               class="flex-1 text-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-3 rounded-lg shadow transition text-sm">
+                Remedial Lessons
+            </a>
+        @endcan
 
 
             <a href="{{ route('payments.index') }}"
