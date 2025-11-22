@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Pdf;
 use App\Models\Term;
 use App\Models\Grade;
 use App\Models\Payment;
+use App\Models\Student;
 use App\Models\RemedialFee;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -63,4 +64,40 @@ class PdfController
 
         return $pdf->download("Remedial_Payment_Slips_{$grade->name}.pdf");
     }
+
+    public function generateStudentRemedialPDF(Student $student)
+{
+    $student->load(['grade', 'gradeStream', 'joinedAcademicYear']);
+
+    // Fetch payments
+    $payments = Payment::where('student_id', $student->id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $totalPaid = $payments->sum('amount');
+
+    // Expected amount
+    $remedialFee = RemedialFee::latest()->first()->amount ?? 0;
+
+    $joinedDate = $student->joinedAcademicYear->start_date ?? now();
+
+    $termsCount = Term::where('start_date', '>=', $joinedDate)
+        ->where('start_date', '<=', now())
+        ->count();
+
+    $expectedAmount = $remedialFee * max($termsCount, 1);
+
+    $balance = $expectedAmount - $totalPaid;
+
+    $pdf = PDF::loadView('admin.remedial.payments.pdf.payments.studentProfile', [
+        'student'      => $student,
+        'payments'     => $payments,
+        'totalPaid'    => $totalPaid,
+        'balance'      => $balance,
+    ]);
+
+    return $pdf->download("{$student->adm}_Remedial_Profile.pdf");
+}
+
+
 }

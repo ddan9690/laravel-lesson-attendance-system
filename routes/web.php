@@ -148,5 +148,8 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('admin/pdf')->group(function () {
         Route::get('remedial/grade/{grade}', [PdfController::class, 'generateGradeRemedialPDF'])
             ->name('admin.pdf.remedial.grade');
+
+        Route::get('/admin/remedial/payments/student/{student}/pdf', [PdfController::class, 'generateStudentRemedialPDF'])
+            ->name('remedial.payments.student.pdf');
     });
 });

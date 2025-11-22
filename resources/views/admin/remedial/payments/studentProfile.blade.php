@@ -19,6 +19,9 @@
                     <p><span class="font-semibold">Grade:</span> {{ $student->grade->name ?? 'N/A' }}</p>
                     <p><span class="font-semibold">Stream:</span> {{ $student->gradeStream->name ?? 'N/A' }}</p>
                     <p><span class="font-semibold">Status:</span> {{ $student->status }}</p>
+                    <p><span class="font-semibold">Admitted :</span> 
+                        {{ $student->joinedAcademicYear->year ?? 'N/A' }} - {{ $student->joinedTerm->name ?? 'N/A' }}
+                    </p>
                 </div>
             </div>
 
@@ -35,16 +38,18 @@
                     Balance:
                     Ksh {{ number_format($balance) }}
                 </p>
+
+                {{-- Download PDF Button --}}
+                <a href="{{ route('remedial.payments.student.pdf', $student->id) }}" 
+                   target="_blank"
+                   class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
+                    Download PDF
+                </a>
             </div>
 
         </div>
 
         <div class="border-t mt-6 pt-4"></div>
-
-        <p class="text-gray-500 text-sm italic">
-            Remedial fee report generated on {{ now()->format('d M Y') }}.
-        </p>
-
     </div>
 
     <div class="bg-white rounded-xl shadow p-8 border border-gray-100">
