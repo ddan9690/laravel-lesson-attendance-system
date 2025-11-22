@@ -12,9 +12,10 @@
     <nav class="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
 
         <!-- Dashboard visible to all authenticated users -->
-        <a href="{{ dashboard_route() }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-green-700 transition">
+        <a href="{{ route('home') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-green-700 transition">
             <i class='bx bxs-dashboard mr-3 text-xl'></i> Dashboard
         </a>
+
 
         <!-- Teachers link visible only to users with 'manage_users' permission -->
         @can('manage_users')
@@ -44,9 +45,5 @@
                 <i class='bx bx-money mr-3 text-xl'></i> Remedial Management
             </a>
         @endcan
-
-
-
-
     </nav>
 </aside>

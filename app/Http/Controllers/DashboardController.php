@@ -5,54 +5,45 @@ namespace App\Http\Controllers;
 use App\Models\Term;
 use App\Models\Grade;
 use App\Models\Payment;
+use Illuminate\View\View;
 use App\Models\AcademicYear;
-
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class DashboardController
+class DashboardController 
 {
-    /**
-     * Redirect user to their role-specific dashboard after login.
-     */
-    public function index()
+
+    public function home()
     {
         $user = Auth::user();
+        $roles = $user->getRoleNames();
 
-        // Role → Route mapping
-        $map = [
-            // Admin-level group
-            ['roles' => ['super_admin', 'principal', 'deputy', 'dos', 'senior_teacher'], 'route' => 'dashboard.admin'],
-
-            // Committee
-            ['roles' => ['committee_member'], 'route' => 'dashboard.committee'],
-
-            // Class supervisors
-            ['roles' => ['class_supervisor'], 'route' => 'dashboard.class_supervisor'],
-
-            // Class teachers
-            ['roles' => ['class_teacher'], 'route' => 'dashboard.class_teacher'],
-
-            // Normal teacher
-            ['roles' => ['teacher'], 'route' => 'dashboard.teacher'],
+        // Role-based redirection mapping
+        $roleRedirects = [
+            'super_admin' => 'dashboard.admin',
+            'principal' => 'dashboard.admin',
+            'deputy' => 'dashboard.admin',
+            'dos' => 'dashboard.admin', 
+            'senior_teacher' => 'dashboard.admin',
+            'committee_member' => 'dashboard.committee',
+            'class_supervisor' => 'dashboard.class_supervisor',
+            'class_teacher' => 'dashboard.class_teacher',
+            'teacher' => 'dashboard.teacher',
         ];
 
-
-        foreach ($map as $item) {
-            if ($user->hasAnyRole($item['roles'])) {
-                return redirect()->route($item['route']);
+        foreach ($roleRedirects as $role => $route) {
+            if ($roles->contains($role)) {
+                return redirect()->route($route);
             }
         }
 
-        // Fallback view (no role assigned)
-        return view('home', compact('user'));
+      
+        return redirect()->route('dashboard.admin');
     }
 
-
-    // =======================
-    // DASHBOARD VIEWS
-    // =======================
-
+    /**
+     * Admin Dashboard - DIRECT VIEW RETURN
+     */
     public function admin(Request $request)
     {
         // Current academic year & term
@@ -147,26 +138,47 @@ class DashboardController
         ));
     }
 
-
-    public function committee()
+    /**
+     * Committee Dashboard - DIRECT VIEW RETURN
+     */
+    public function committee(): View
     {
-        return $this->view('dashboards.committee');
-    }
-    public function classSupervisor()
-    {
-        return $this->view('dashboards.class_supervisor');
-    }
-    public function classTeacher()
-    {
-        return $this->view('dashboards.class_teacher');
-    }
-    public function teacher()
-    {
-        return $this->view('dashboards.teacher');
+        return view('dashboards.committee', [
+            'user' => Auth::user(),
+            'role' => Auth::user()->getRoleNames()->first(),
+        ]);
     }
 
-    private function view($path)
+    /**
+     * Class Supervisor Dashboard - DIRECT VIEW RETURN
+     */
+    public function classSupervisor(): View
     {
-        return view($path, ['user' => Auth::user()]);
+        return view('dashboards.class_supervisor', [
+            'user' => Auth::user(),
+            'role' => Auth::user()->getRoleNames()->first(),
+        ]);
+    }
+
+    /**
+     * Class Teacher Dashboard - DIRECT VIEW RETURN
+     */
+    public function classTeacher(): View
+    {
+        return view('dashboards.class_teacher', [
+            'user' => Auth::user(),
+            'role' => Auth::user()->getRoleNames()->first(),
+        ]);
+    }
+
+    /**
+     * Teacher Dashboard - DIRECT VIEW RETURN
+     */
+    public function teacher(): View
+    {
+        return view('dashboards.teacher', [
+            'user' => Auth::user(),
+            'role' => Auth::user()->getRoleNames()->first(),
+        ]);
     }
 }

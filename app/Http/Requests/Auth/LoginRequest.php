@@ -22,17 +22,7 @@ class LoginRequest extends FormRequest
         ];
     }
 
-    protected function failedValidation(\Illuminate\Contracts\Validation\Validator $validator)
-    {
-        throw (new ValidationException($validator))
-            ->errorBag($this->errorBag)
-            ->redirectTo($this->getRedirectUrl());
-    }
-
-    /**
-     * Authenticate the user and return role-based redirect route.
-     */
-    public function authenticate(): string
+    public function authenticate(): void
     {
         $credentials = $this->only('login', 'password');
         $remember = $this->filled('remember');
@@ -45,46 +35,14 @@ class LoginRequest extends FormRequest
             ])->redirectTo($this->getRedirectUrl());
         }
 
+        // Remember-me cookie
         $user = Auth::user();
 
-        // Handle remember-me cookie
         if ($remember) {
-            $this->setRememberMeCookie();
+            $rememberToken = $user->getRememberToken();
+            Cookie::queue('remember_me', $rememberToken, 43200);
         } else {
-            $this->deleteRememberMeCookie();
+            Cookie::queue(Cookie::forget('remember_me'));
         }
-
-        // Role-based redirection
-        $roleRoutes = [
-            'super_admin'     => 'dashboard.admin',
-            'principal'       => 'dashboard.admin',
-            'deputy'          => 'dashboard.admin',
-            'dos'             => 'dashboard.admin',
-            'senior_teacher'  => 'dashboard.admin',
-            'committee_member'=> 'dashboard.committee',
-            'class_supervisor'=> 'dashboard.class_supervisor',
-            'class_teacher'   => 'dashboard.class_teacher',
-            'teacher'         => 'dashboard.teacher',
-        ];
-
-        foreach ($roleRoutes as $role => $route) {
-            if ($user->hasRole($role)) {
-                return route($route);
-            }
-        }
-
-        // fallback
-        return route('home');
-    }
-
-    private function setRememberMeCookie(): void
-    {
-        $rememberToken = Auth::user()->getRememberToken();
-        Cookie::queue('remember_me', $rememberToken, 43200); // 30 days
-    }
-
-    private function deleteRememberMeCookie(): void
-    {
-        Cookie::queue(Cookie::forget('remember_me'));
     }
 }

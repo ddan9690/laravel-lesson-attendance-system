@@ -47,7 +47,7 @@
 
                         this.saving = true;
                         try {
-                            const res = await fetch('{{ route('classes.streams.updateTeacher') }}', {
+                           const res = await fetch('{{ route('classes.streams.updateTeacher', ['stream' => $stream->id]) }}', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',

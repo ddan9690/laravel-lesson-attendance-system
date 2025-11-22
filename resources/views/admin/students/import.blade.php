@@ -7,15 +7,12 @@
     Import Students to Stream: {{ $stream->name }}
 </h1>
 
-<div class="bg-white shadow rounded p-6 max-w-xl mx-auto"
-     x-data="importForm()"
-     x-cloak>
+<div class="bg-white shadow rounded p-6 max-w-xl mx-auto">
 
     <form 
         action="{{ route('admin.students.import.grade.store', $stream->id) }}" 
         method="POST" 
         enctype="multipart/form-data"
-        @submit.prevent="confirmSubmit"
     >
         @csrf
 
@@ -24,7 +21,7 @@
             <label class="block text-gray-700 font-medium mb-1">Joined Academic Year & Term</label>
 
             <div class="mb-2">
-                <select name="joined_academic_year_id" x-model="selectedYear" @change="updateTerms()" required
+                <select name="joined_academic_year_id" required
                         class="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-green-200">
                     <option value="">-- Select Academic Year --</option>
                     @foreach($academicYears as $year)
@@ -35,12 +32,14 @@
             </div>
 
             <div>
-                <select name="joined_term_id" x-model="selectedTerm" required
+                <select name="joined_term_id" required
                         class="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-green-200">
                     <option value="">-- Select Term --</option>
-                    <template x-for="term in terms" :key="term.id">
-                        <option :value="term.id" x-text="term.name"></option>
-                    </template>
+                    @foreach($academicYears as $year)
+                        @foreach($year->terms as $term)
+                            <option value="{{ $term->id }}">{{ $term->name }}</option>
+                        @endforeach
+                    @endforeach
                 </select>
                 @error('joined_term_id') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
             </div>
@@ -50,18 +49,15 @@
         <div class="mb-4">
             <label class="block text-gray-700 font-medium mb-1">Excel File</label>
             <input type="file" name="students_file" accept=".xlsx,.xls,.csv" required
-                   class="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-green-200"
-                   x-ref="fileInput">
+                   class="w-full border border-gray-300 rounded px-3 py-2 focus:ring focus:ring-green-200">
             @error('students_file') <p class="text-red-600 text-sm mt-1">{{ $message }}</p> @enderror
         </div>
 
         {{-- Submit --}}
         <div class="flex items-center gap-3 mt-6">
             <button type="submit"
-                    :disabled="isSubmitting"
-                    class="bg-school-green text-white px-6 py-2 rounded hover:bg-green-700 disabled:opacity-50">
-                <span x-show="!isSubmitting">Import Students</span>
-                <span x-show="isSubmitting">Importing...</span>
+                    class="bg-school-green text-white px-6 py-2 rounded hover:bg-green-700">
+                Import Students
             </button>
             <a href="{{ route('classes.streams.students', $stream->id) }}"
                class="bg-gray-500 text-white px-6 py-2 rounded hover:bg-gray-600">Cancel</a>
@@ -69,63 +65,4 @@
 
     </form>
 </div>
-
-{{-- Alpine JS --}}
-<script>
-function importForm() {
-    return {
-        selectedYear: '',
-        selectedTerm: '',
-        terms: [],
-        isSubmitting: false,
-        allYears: @json($academicYears),
-
-        updateTerms() {
-            const year = this.allYears.find(y => y.id == this.selectedYear);
-            this.terms = year ? year.terms : [];
-            if (!this.terms.find(t => t.id == this.selectedTerm)) {
-                this.selectedTerm = '';
-            }
-        },
-
-        confirmSubmit() {
-            if(this.isSubmitting) return;
-
-            const fileInput = this.$refs.fileInput;
-            if (!fileInput.files.length) {
-                Swal.fire('Oops!', 'Please select a file to import.', 'warning');
-                return;
-            }
-
-            Swal.fire({
-                title: 'Are you sure?',
-                text: "You are about to import students. This cannot be undone!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, import!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    this.isSubmitting = true;
-                    this.$el.querySelector('form').submit();
-                }
-            });
-        }
-    }
-}
-</script>
-
-{{-- SweetAlert Success --}}
-@if(session('success'))
-<script>
-    Swal.fire({
-        title: 'Success!',
-        text: "{{ session('success') }}",
-        icon: 'success',
-        timer: 3000,
-        showConfirmButton: false
-    });
-</script>
-@endif
 @endsection

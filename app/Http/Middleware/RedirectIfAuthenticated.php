@@ -12,8 +12,6 @@ class RedirectIfAuthenticated
 {
     /**
      * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$guards): Response
     {
@@ -21,7 +19,22 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                $user = Auth::guard($guard)->user();
+                $role = $user->getRoleNames()->first();
+
+                // Use the SAME logic as login redirect
+                return match($role) {
+                    'super_admin', 'principal', 'deputy', 'dos', 'senior_teacher' 
+                        => redirect()->route('dashboard.admin'),
+                    'committee_member' 
+                        => redirect()->route('dashboard.committee'),
+                    'class_supervisor' 
+                        => redirect()->route('dashboard.class_supervisor'),
+                    'class_teacher' 
+                        => redirect()->route('dashboard.class_teacher'),
+                    default 
+                        => redirect()->route('dashboard.teacher'),
+                };
             }
         }
 

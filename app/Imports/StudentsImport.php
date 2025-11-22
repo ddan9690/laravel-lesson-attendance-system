@@ -35,7 +35,7 @@ class StudentsImport implements ToModel, WithHeadingRow
             return [strtolower(trim($key)) => $value];
         })->toArray();
 
-        // Skip rows missing required fields
+       
         if (empty($row['adm']) || empty($row['name'])) {
             return null;
         }
@@ -45,7 +45,7 @@ class StudentsImport implements ToModel, WithHeadingRow
             'adm' => $row['adm'],
             'phone' => $row['phone'] ?? null,
             'grade_stream_id' => $this->streamId,
-            'grade_id' => $this->gradeId, // guaranteed non-null
+            'grade_id' => $this->gradeId,
             'status' => 'active',
             'joined_academic_year_id' => $this->academicYearId,
             'joined_term_id' => $this->termId,
