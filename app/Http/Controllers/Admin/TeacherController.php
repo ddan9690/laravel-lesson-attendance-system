@@ -54,7 +54,7 @@ class TeacherController
             event(new Registered($user));
 
             return redirect()->route('teachers.index')
-                ->with('success', 'Teacher created successfully. Login credentials are the last 4 digits of the phone.');
+                ->with('success', 'Teacher created successfully.');
         } catch (QueryException $e) {
             return redirect()->back()->withInput()
                 ->withErrors($e->getMessage());

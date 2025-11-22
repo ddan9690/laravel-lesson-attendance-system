@@ -45,7 +45,7 @@ class ManageClassController
         return view('admin.classes.show', compact('curriculum', 'type', 'forms', 'grades', 'teachers'));
     }
 
-    // ManageClassController.php
+    
     public function updateSupervisor(Request $request)
     {
         $request->validate([
