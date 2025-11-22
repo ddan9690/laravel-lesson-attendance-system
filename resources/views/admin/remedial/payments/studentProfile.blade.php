@@ -41,7 +41,6 @@
 
                 {{-- Download PDF Button --}}
                 <a href="{{ route('remedial.payments.student.pdf', $student->id) }}" 
-                   target="_blank"
                    class="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition">
                     Download PDF
                 </a>
