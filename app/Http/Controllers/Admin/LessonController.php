@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Models\Curriculum;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class LessonController
 {
     public function index()
     {
-        return view('admin.remedial.lessons.index');
+        $curricula = Curriculum::all();
+
+        return view('lessons.index', compact('curricula'));
+    
     }
 }
