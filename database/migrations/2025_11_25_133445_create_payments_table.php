@@ -17,13 +17,11 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained()->cascadeOnDelete();
             $table->foreignId('grade_id')->nullable()->constrained()->nullOnDelete();
             $table->foreignId('grade_stream_id')->nullable()->constrained()->nullOnDelete();
-            
             $table->string('student_name');
             $table->integer('student_adm');
             $table->string('grade_name')->nullable();
             $table->string('stream_name')->nullable();
-            
-             $table->integer('amount')->change();
+            $table->integer('amount');
             $table->enum('payment_type', ['cash', 'mpesa'])->default('mpesa');
             $table->string('mpesa_transaction_number')->nullable();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
