@@ -29,7 +29,7 @@ class GradeStream extends Model
     }
 
     public function students()
-{
-    return $this->hasMany(Student::class, 'grade_stream_id');
-}
+    {
+        return $this->hasMany(Student::class, 'grade_stream_id');
+    }
 }

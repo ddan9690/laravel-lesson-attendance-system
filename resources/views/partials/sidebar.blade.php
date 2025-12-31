@@ -45,5 +45,11 @@
                 <i class='bx bx-money mr-3 text-xl'></i> Remedial Management
             </a>
         @endcan
+
+         @can('lesson_view')
+            <a href="{{ route('lessons.index') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-green-700 transition">
+                <i class='bx bx-notepad mr-3 text-xl'></i> Lesson Management
+            </a>
+        @endcan
     </nav>
 </aside>

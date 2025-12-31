@@ -33,4 +33,9 @@ class Curriculum extends Model
     {
         return $this->hasMany(LearningArea::class);
     }
+
+    public function lessons()
+    {
+        return $this->hasMany(Lesson::class);
+    }
 }

@@ -5,21 +5,25 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 use Spatie\Permission\Models\Role;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Database\QueryException;
 
 class TeacherController
 {
     public function index()
     {
-        $teachers = User::orderBy('name')->get();
+        // Load all teachers
+        $teachers = User::role('teacher')
+            ->orderBy('name')
+            ->get();
+
+        // Roles for display (exclude class_teacher and class_supervisor)
         $roles = Role::whereNotIn('name', ['class_teacher', 'class_supervisor'])
-            ->pluck('name') // get role names
-            ->mapWithKeys(fn($r) => [$r => ucwords(str_replace('_', ' ', $r))]) // clean display names
+            ->pluck('name')
+            ->mapWithKeys(fn($r) => [$r => ucwords(str_replace('_', ' ', $r))])
             ->toArray();
 
         return view('admin.teachers.index', compact('teachers', 'roles'));
@@ -33,32 +37,28 @@ class TeacherController
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'  => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'phone' => 'required|string|max:20|unique:users,phone',
         ]);
 
-        try {
-            $code = substr($request->phone, -4);
+        $code = substr($request->phone, -4);
 
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'code' => $code,
-                'slug' => Str::slug($request->name) . '-' . time(),
-                'password' => Hash::make($request->phone),
-            ]);
+        $teacher = User::create([
+            'name'     => $request->name,
+            'email'    => $request->email,
+            'phone'    => $request->phone,
+            'code'     => $code,
+            'slug'     => Str::slug($request->name) . '-' . time(),
+            'password' => Hash::make($request->phone), // default password is phone
+        ]);
 
-            $user->assignRole('teacher');
-            event(new Registered($user));
+        $teacher->assignRole('teacher');
+        event(new Registered($teacher));
 
-            return redirect()->route('teachers.index')
-                ->with('success', 'Teacher created successfully.');
-        } catch (QueryException $e) {
-            return redirect()->back()->withInput()
-                ->withErrors($e->getMessage());
-        }
+        return redirect()
+            ->route('teachers.index')
+            ->with('success', 'Teacher created successfully. Subjects can be assigned later.');
     }
 
     private function findTeacher($id, $slug)
@@ -77,7 +77,7 @@ class TeacherController
         $teacher = $this->findTeacher($id, $slug);
 
         $request->validate([
-            'name' => 'required|string|max:255',
+            'name'  => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $teacher->id,
             'phone' => 'nullable|string|max:20',
         ]);
@@ -115,18 +115,17 @@ class TeacherController
 
     public function showChangePasswordForm()
     {
-        return view('auth.change-password'); 
+        return view('auth.change-password');
     }
 
-     public function updatePassword(Request $request)
+    public function updatePassword(Request $request)
     {
-
         $request->validate([
-            'new_password' => 'required|string|min:8|confirmed', 
+            'new_password' => 'required|string|min:8|confirmed',
         ]);
 
         $teacher = Auth::user();
-
+        
         $teacher->password = Hash::make($request->new_password);
         $teacher->save();
 

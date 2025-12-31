@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('lessons', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->foreignId('curriculum_id')->constrained('curricula')->cascadeOnDelete();
             $table->time('start_time');
             $table->time('end_time');
-            $table->boolean('status')->default(1);
+            $table->foreignId('curriculum_id')->constrained('curricula')->cascadeOnDelete();
             $table->timestamps();
         });
     }

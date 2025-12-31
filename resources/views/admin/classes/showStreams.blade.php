@@ -47,7 +47,7 @@
 
                         this.saving = true;
                         try {
-                           const res = await fetch('{{ route('classes.streams.updateTeacher', ['stream' => $stream->id]) }}', {
+                            const res = await fetch('{{ route('classes.streams.updateTeacher', ['stream' => $stream->id]) }}', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -84,14 +84,34 @@
                         @endforeach
                     </select>
                 </td>
-                <td class="py-2 px-4 border-t border-gray-200 whitespace-nowrap">
+                <td class="py-2 px-4 border-t border-gray-200 whitespace-nowrap flex space-x-2">
+                    {{-- Manage Streams --}}
+                    <a href="{{ route('classes.streams.showStreams', [
+                        'type' => $type,
+                        'id' => $item->id
+                    ]) }}"
+                        class="bg-school-green text-white px-3 py-1 rounded hover:bg-green-700 flex items-center space-x-1">
+                        <i class='bx bx-cog'></i>
+                        <span>Manage Streams</span>
+                    </a>
+
+                    {{-- New: Manage Subject/Learning Area Teachers --}}
+                    <a href="{{ route('classes.assignments.manage', [
+                        'curriculum' => strtolower($curriculum->name),
+                        'id' => $item->id
+                    ]) }}"
+                        class="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600 flex items-center space-x-1">
+                        <i class='bx bx-user'></i>
+                        <span>
+                            {{ $type === 'form' ? 'Manage Subject Teachers' : 'Manage Learning Area Teachers' }}
+                        </span>
+                    </a>
+
                     @if($type === 'grade')
                         <a href="{{ route('classes.streams.students', ['stream' => $stream->id]) }}"
-                           class="bg-school-green text-white px-3 py-1 rounded hover:bg-green-700 text-sm">
+                           class="bg-gray-700 text-white px-3 py-1 rounded hover:bg-gray-800 text-sm">
                             View Students
                         </a>
-                    @else
-                        <span class="text-gray-500 text-sm">N/A</span>
                     @endif
                 </td>
             </tr>

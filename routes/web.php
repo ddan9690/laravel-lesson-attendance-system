@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\LessonController;
 use App\Http\Controllers\Admin\StreamController;
 use App\Http\Controllers\Admin\Pdf\PdfController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Admin\PaymentsController;
 use App\Http\Controllers\Admin\RemedialController;
 use App\Http\Controllers\Admin\PromotionController;
 use App\Http\Controllers\Admin\ManageClassController;
+use App\Http\Controllers\TeacherAssignmentController;
 use App\Http\Controllers\Admin\SubjectLearningAreaController;
 
 require __DIR__ . '/auth.php';
@@ -87,6 +89,8 @@ Route::middleware(['auth'])->group(function () {
             Route::get('students', [StreamController::class, 'manageStudents'])->name('classes.streams.students');
             Route::post('update-teacher', [StreamController::class, 'updateTeacher'])->name('classes.streams.updateTeacher');
         });
+        Route::get('{curriculum}/{id}/assignments', [TeacherAssignmentController::class, 'manage'])
+            ->name('classes.assignments.manage');
     });
 
     // ======================================================
@@ -121,6 +125,29 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('{id}', [SubjectLearningAreaController::class, 'destroy'])->name('subjects.destroy');
     });
 
+    Route::middleware(['can:lesson_view'])->prefix('lessons')->group(function () {
+
+        Route::get('/', [LessonController::class, 'index'])->name('lessons.index');
+        Route::get('create', [LessonController::class, 'create'])->middleware('can:lesson_capture')->name('lessons.create');
+        Route::post('/', [LessonController::class, 'store'])->middleware('can:lesson_capture')->name('lessons.store');
+        Route::get('{lesson}/edit', [LessonController::class, 'edit'])->middleware('can:lesson_edit')->name('lessons.edit');
+        Route::put('{lesson}', [LessonController::class, 'update'])->middleware('can:lesson_edit')->name('lessons.update');
+        Route::delete('{lesson}', [LessonController::class, 'destroy'])->middleware('can:lesson_delete')->name('lessons.destroy');
+    });
+
+    Route::middleware(['can:lesson_view'])->prefix('attendance')->group(function () {
+
+        Route::get('/', [AttendanceController::class, 'index'])->name('attendance.index');
+        Route::get('create', [AttendanceController::class, 'create'])->middleware('can:lesson_capture')->name('attendance.create');
+        Route::post('/', [AttendanceController::class, 'store'])->middleware('can:lesson_capture')->name('attendance.store');
+        Route::get('{attendance}/edit', [AttendanceController::class, 'edit'])->middleware('can:lesson_edit')->name('attendance.edit');
+        Route::put('{attendance}', [AttendanceController::class, 'update'])->middleware('can:lesson_edit')->name('attendance.update');
+        Route::delete('{attendance}', [AttendanceController::class, 'destroy'])->middleware('can:lesson_delete')->name('attendance.destroy');
+    });
+
+
+
+
     // ======================================================
     // REMEDIAL & PAYMENTS
     // ======================================================
@@ -138,8 +165,6 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('student/search', [PaymentsController::class, 'searchStudent'])->name('remedial.student.search');
         Route::get('student/{student}', [PaymentsController::class, 'studentProfile'])->name('remedial.student.profile');
-
-        Route::get('remedial/lessons', [LessonController::class, 'index'])->name('lessons.index');
     });
 
     // ======================================================
