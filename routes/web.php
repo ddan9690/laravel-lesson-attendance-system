@@ -143,6 +143,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('{attendance}/edit', [AttendanceController::class, 'edit'])->middleware('can:lesson_edit')->name('attendance.edit');
         Route::put('{attendance}', [AttendanceController::class, 'update'])->middleware('can:lesson_edit')->name('attendance.update');
         Route::delete('{attendance}', [AttendanceController::class, 'destroy'])->middleware('can:lesson_delete')->name('attendance.destroy');
+        Route::get('/form-streams/{form}', [AttendanceController::class, 'getFormStreams']);
+        Route::get('/grade-streams/{grade}', [AttendanceController::class, 'getGradeStreams']);
     });
 
 

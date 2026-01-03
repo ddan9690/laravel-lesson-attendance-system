@@ -24,4 +24,59 @@ class Attendance extends Model
         'notes',
         'captured_by',
     ];
+
+    public function teacher()
+    {
+        return $this->belongsTo(User::class, 'teacher_id');
+    }
+
+    public function lesson()
+    {
+        return $this->belongsTo(Lesson::class);
+    }
+
+    public function academicYear()
+    {
+        return $this->belongsTo(AcademicYear::class);
+    }
+
+    public function term()
+    {
+        return $this->belongsTo(Term::class);
+    }
+
+    public function week()
+    {
+        return $this->belongsTo(Week::class);
+    }
+
+    public function curriculum()
+    {
+        return $this->belongsTo(Curriculum::class);
+    }
+
+    public function form()
+    {
+        return $this->belongsTo(Form::class);
+    }
+
+    public function formStream()
+    {
+        return $this->belongsTo(FormStream::class);
+    }
+
+    public function grade()
+    {
+        return $this->belongsTo(Grade::class);
+    }
+
+    public function gradeStream()
+    {
+        return $this->belongsTo(GradeStream::class);
+    }
+
+    public function capturedBy()
+    {
+        return $this->belongsTo(User::class, 'captured_by');
+    }
 }
