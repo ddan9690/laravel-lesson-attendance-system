@@ -15,19 +15,22 @@ class TeacherController
 {
     public function index()
     {
-        // Load all teachers
-        $teachers = User::role('teacher')
-            ->orderBy('name')
-            ->get();
+       
+        $teachers = User::orderBy('name')->get();
 
-        // Roles for display (exclude class_teacher and class_supervisor)
+      
         $roles = Role::whereNotIn('name', ['class_teacher', 'class_supervisor'])
             ->pluck('name')
             ->mapWithKeys(fn($r) => [$r => ucwords(str_replace('_', ' ', $r))])
             ->toArray();
 
-        return view('admin.teachers.index', compact('teachers', 'roles'));
+        // Logged-in user roles
+        $userRoles = auth()->user()->getRoleNames()->toArray();
+
+        return view('admin.teachers.index', compact('teachers', 'roles', 'userRoles'));
     }
+
+
 
     public function create()
     {
@@ -125,7 +128,7 @@ class TeacherController
         ]);
 
         $teacher = Auth::user();
-        
+
         $teacher->password = Hash::make($request->new_password);
         $teacher->save();
 

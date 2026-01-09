@@ -145,6 +145,23 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('{attendance}', [AttendanceController::class, 'destroy'])->middleware('can:lesson_delete')->name('attendance.destroy');
         Route::get('/form-streams/{form}', [AttendanceController::class, 'getFormStreams']);
         Route::get('/grade-streams/{grade}', [AttendanceController::class, 'getGradeStreams']);
+        Route::get('/my-attendance', [DashboardController::class, 'myAttendance'])
+            ->name('dashboard.myAttendance');
+        Route::get('/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
+            ->name('dashboard.weekAttendance');
+        Route::get('/attendance/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
+            ->name('dashboard.weekAttendance');
+
+        Route::get('/attendance/teacher/{teacher}/weeks', [AttendanceController::class, 'teacherWeeks'])
+            ->name('attendance.teacherWeeks');
+        Route::get('/attendance/teacher/{teacher}/week/{week}', [AttendanceController::class, 'teacherWeekAttendance'])
+            ->name('attendance.teacherWeekAttendance');
+        Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])
+            ->middleware('can:lesson_delete')
+            ->name('attendance.destroy');
+
+        Route::get('/api/terms', [AttendanceController::class, 'getTerms']);
+        Route::get('/api/weeks', [AttendanceController::class, 'getWeeks']);
     });
 
 

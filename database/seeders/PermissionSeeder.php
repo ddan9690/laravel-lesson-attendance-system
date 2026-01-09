@@ -92,6 +92,7 @@ class PermissionSeeder extends Seeder
                         'payment_edit',
                         'payment_delete',
                         'manage_users',
+                         'manage_roles', 
                         'manage_curricula',
                         'manage_classes',
                         'manage_forms',

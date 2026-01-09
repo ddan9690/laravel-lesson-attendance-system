@@ -48,7 +48,7 @@
 
          @can('lesson_view')
             <a href="{{ route('lessons.index') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-green-700 transition">
-                <i class='bx bx-notepad mr-3 text-xl'></i> Lesson Management
+                <i class='bx bx-notepad mr-3 text-xl'></i> Lessons
             </a>
         @endcan
     </nav>
