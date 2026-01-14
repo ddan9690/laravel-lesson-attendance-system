@@ -34,7 +34,7 @@
                                         'week' => $week['week_id']
                                     ]) }}"
                                    class="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 text-xs md:text-sm">
-                                    View Records
+                                    View
                                 </a>
                             </td>
                         </tr>
