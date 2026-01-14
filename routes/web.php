@@ -150,7 +150,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
             ->name('dashboard.weekAttendance');
         Route::get('/attendance/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
-            ->name('dashboard.weekAttendance');
+            ->name('dashboard.MyWeekAttendance');
 
         Route::get('/attendance/teacher/{teacher}/weeks', [AttendanceController::class, 'teacherWeeks'])
             ->name('attendance.teacherWeeks');

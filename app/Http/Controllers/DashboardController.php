@@ -181,12 +181,12 @@ class DashboardController
         $user = auth()->user();
 
         // Get current active academic year and term
-        $currentYear = \App\Models\AcademicYear::where('active', true)->first();
-        $currentTerm = \App\Models\Term::where('academic_year_id', $currentYear->id ?? 0)
+        $currentYear = AcademicYear::where('active', true)->first();
+        $currentTerm = Term::where('academic_year_id', $currentYear->id ?? 0)
             ->where('active', true)->first();
 
         // Fetch all attendance for this teacher for the given week
-        $attendance = \App\Models\Attendance::with([
+        $attendance = Attendance::with([
             'lesson',
             'form',
             'formStream',
