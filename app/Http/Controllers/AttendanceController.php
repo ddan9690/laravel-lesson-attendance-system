@@ -47,7 +47,10 @@ class AttendanceController
 
         $weeks = Week::where('term_id', $term->id)->get();
 
-        $users = User::where('email', '!=', 'dancanokeyo08@gmail.com')->get();
+        $users = User::where('email', '!=', 'dancanokeyo08@gmail.com')
+            ->orderBy('name', 'asc')
+            ->get();
+
 
         return view('attendance.create', compact(
             'curriculums',
@@ -179,6 +182,4 @@ class AttendanceController
             'message' => 'Attendance record deleted successfully.'
         ]);
     }
-
-  
 }
