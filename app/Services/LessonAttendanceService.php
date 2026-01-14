@@ -10,22 +10,14 @@ use App\Models\Week;
 
 class LessonAttendanceService
 {
-    /**
-     * Get authenticated teacher's lesson attendance for active term
-     */
     public function getMyAttendance(int $teacherId)
     {
-        // Get current active academic year
         $currentYear = AcademicYear::where('active', true)->first();
-
-        // Get current active term in that year
-        $currentTerm = Term::where('academic_year_id', $currentYear->id)
+        $currentTerm = Term::where('academic_year_id', $currentYear->id ?? 0)
             ->where('active', true)
             ->first();
 
-        // Get all weeks in this term
         $weeks = $currentTerm ? Week::where('term_id', $currentTerm->id)->orderBy('id')->get() : collect();
-
         $attendanceByWeek = [];
 
         foreach ($weeks as $week) {
@@ -46,9 +38,9 @@ class LessonAttendanceService
                 ->count();
 
             $attendanceByWeek[] = [
-                'week_id'   => $week->id,
+                'week_id' => $week->id,
                 'week_name' => $week->name,
-                'total'     => $attended844 + $attendedCBC,
+                'total' => $attended844 + $attendedCBC,
             ];
         }
 
@@ -98,5 +90,98 @@ class LessonAttendanceService
         }
 
         return collect($summary);
+    }
+
+    public function getClassAttendanceSummary(
+        string $curriculumName,
+        ?int $formId = null,
+        ?int $gradeId = null,
+        ?array $weekIds = [],
+        ?string $from = null,
+        ?string $to = null
+    ) {
+        $currentYear = AcademicYear::where('active', true)->first();
+        $currentTerm = Term::where('academic_year_id', $currentYear->id ?? 0)
+            ->where('active', true)
+            ->first();
+
+        if (!$currentYear || !$currentTerm) return collect();
+
+        $query = Attendance::where('academic_year_id', $currentYear->id)
+            ->where('term_id', $currentTerm->id)
+            ->whereHas('curriculum', fn($q) => $q->where('name', $curriculumName));
+
+        if ($curriculumName === '8-4-4' && $formId) {
+            $query->where('form_id', $formId);
+        } elseif ($curriculumName === 'CBC' && $gradeId) {
+            $query->where('grade_id', $gradeId);
+        }
+
+        if (!empty($weekIds)) {
+            $query->whereIn('week_id', $weekIds);
+        }
+
+        if ($from) $query->whereDate('created_at', '>=', $from);
+        if ($to) $query->whereDate('created_at', '<=', $to);
+
+        $attended = (clone $query)->whereIn('status', ['attended', 'makeup'])->count();
+        $missed = (clone $query)->where('status', 'missed')->count();
+
+        $weeks = $currentTerm ? Week::where('term_id', $currentTerm->id)->orderBy('id')->get() : collect();
+        $weekData = [];
+        foreach ($weeks as $week) {
+            $weekQuery = (clone $query)->where('week_id', $week->id);
+            $weekData[] = [
+                'week_id' => $week->id,
+                'week_name' => $week->name,
+                'attended' => (clone $weekQuery)->whereIn('status', ['attended', 'makeup'])->count(),
+                'missed' => (clone $weekQuery)->where('status', 'missed')->count(),
+            ];
+        }
+
+        return [
+            'curriculum' => $curriculumName,
+            'total_attended' => $attended,
+            'total_missed' => $missed,
+            'weeks' => $weekData,
+        ];
+    }
+
+    public function getStreamAttendance(
+        string $curriculumName,
+        ?int $formStreamId = null,
+        ?int $gradeId = null,
+        ?int $weekId = null
+    ) {
+        $currentYear = AcademicYear::where('active', true)->first();
+        $currentTerm = Term::where('academic_year_id', $currentYear->id ?? 0)
+            ->where('active', true)
+            ->first();
+
+        if (!$currentYear || !$currentTerm) return collect();
+
+        $query = Attendance::where('academic_year_id', $currentYear->id)
+            ->where('term_id', $currentTerm->id)
+            ->whereHas('curriculum', fn($q) => $q->where('name', $curriculumName));
+
+        if ($curriculumName === '8-4-4' && $formStreamId) {
+            $query->where('form_stream_id', $formStreamId);
+        } elseif ($curriculumName === 'CBC' && $gradeId) {
+            $query->where('grade_id', $gradeId);
+        }
+
+        if ($weekId) {
+            $query->where('week_id', $weekId);
+        }
+
+        $records = $query->with([
+            'lesson',
+            'lesson.subject',
+            'lesson.learningArea',
+            'teacher',
+            'curriculum'
+        ])->orderBy('created_at', 'desc')->get();
+
+        return $records;
     }
 }

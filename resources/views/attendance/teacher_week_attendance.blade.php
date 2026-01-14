@@ -5,14 +5,12 @@
 @section('content')
 <div class="p-4 md:p-6">
 
-    <!-- Header -->
     <h1 class="text-2xl font-bold text-green-800 mb-2">
         {{ $teacher->name ?? 'Teacher' }} - Attendance for Week {{ $week->name ?? 'Week' }}
     </h1>
 
     <h2 class="text-lg text-gray-700 mb-4">
-         {{ $currentYear->year ?? 'N/A' }} |
-        Term: {{ $currentTerm->name ?? 'N/A' }}
+         {{ $currentYear->year ?? 'N/A' }} | Term: {{ $currentTerm->name ?? 'N/A' }}
     </h2>
 
     @if($attendanceRecords->isNotEmpty())
@@ -34,7 +32,6 @@
                     @foreach($attendanceRecords as $record)
                         @php
                             $date = $record->lesson->date ?? $record->created_at;
-                           
                             $formattedDate = \Carbon\Carbon::parse($date)->format('D d M y');
 
                             $statusIcon = match($record->status) {
@@ -56,14 +53,12 @@
                             <td class="px-2 py-1 whitespace-nowrap">{{ $curriculumName }}</td>
                             <td class="px-2 py-1 whitespace-nowrap">{{ $record->lesson->name ?? 'N/A' }}</td>
                             <td class="px-2 py-1 whitespace-nowrap">
-                                {{ $record->lesson->learningArea->name ?? $record->lesson->subject->name ?? 'N/A' }}
+                                {{ $record->learningArea->name ?? $record->subject->name ?? '-' }}
                             </td>
                             <td class="px-2 py-1 whitespace-nowrap">
                                 {{ $record->lesson->start_time ? \Carbon\Carbon::parse($record->lesson->start_time)->format('g:ia') : 'N/A' }}
                             </td>
-                            <td class="px-2 py-1 whitespace-nowrap text-center">
-                                {!! $statusIcon !!}
-                            </td>
+                            <td class="px-2 py-1 whitespace-nowrap text-center">{!! $statusIcon !!}</td>
                             <td class="px-2 py-1 whitespace-nowrap">{{ $initials }}</td>
                             <td class="px-2 py-1 text-center">
                                 <button 
@@ -86,40 +81,34 @@
 </div>
 
 <script>
-    function deleteAttendance(id) {
-        Swal.fire({
-            title: 'Confirm Deletion?',
-            text: "Are you sure you want to delete this attendance record?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if(result.isConfirmed) {
-                fetch(`/attendance/${id}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    }
-                })
-                .then(res => res.json())
-                .then(data => {
-                    if(data.success){
-                        Swal.fire(
-                            'Deleted!',
-                            data.message,
-                            'success'
-                        ).then(() => {
-                            location.reload();
-                        });
-                    } else {
-                        Swal.fire('Error!', data.message ?? 'Failed to delete.', 'error');
-                    }
-                })
-                .catch(() => Swal.fire('Error!', 'Something went wrong.', 'error'));
-            }
-        });
-    }
+function deleteAttendance(id) {
+    Swal.fire({
+        title: 'Confirm Deletion?',
+        text: "Are you sure you want to delete this attendance record?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel'
+    }).then((result) => {
+        if(result.isConfirmed) {
+            fetch(`/attendance/${id}`, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success){
+                    Swal.fire('Deleted!', data.message, 'success').then(() => location.reload());
+                } else {
+                    Swal.fire('Error!', data.message ?? 'Failed to delete.', 'error');
+                }
+            })
+            .catch(() => Swal.fire('Error!', 'Something went wrong.', 'error'));
+        }
+    });
+}
 </script>
 @endsection

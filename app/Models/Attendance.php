@@ -9,21 +9,24 @@ class Attendance extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'teacher_id',
-        'lesson_id',
-        'form_id',
-        'form_stream_id',
-        'grade_id',
-        'grade_stream_id',
-        'academic_year_id',
-        'term_id',
-        'week_id',
-        'curriculum_id',
-        'status',
-        'notes',
-        'captured_by',
-    ];
+   protected $fillable = [
+    'teacher_id',
+    'lesson_id',
+    'subject_id',
+    'learning_area_id',
+    'form_id',
+    'form_stream_id',
+    'grade_id',
+    'grade_stream_id',
+    'academic_year_id',
+    'term_id',
+    'week_id',
+    'curriculum_id',
+    'status',
+    'notes',
+    'captured_by',
+];
+
 
     public function teacher()
     {
@@ -78,5 +81,15 @@ class Attendance extends Model
     public function capturedBy()
     {
         return $this->belongsTo(User::class, 'captured_by');
+    }
+
+    public function learningArea()
+    {
+        return $this->belongsTo(LearningArea::class);
+    }
+
+    public function subject()
+    {
+        return $this->belongsTo(Subject::class);
     }
 }

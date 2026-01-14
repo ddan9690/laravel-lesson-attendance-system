@@ -149,19 +149,36 @@ Route::middleware(['auth'])->group(function () {
             ->name('dashboard.myAttendance');
         Route::get('/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
             ->name('dashboard.weekAttendance');
-        Route::get('/attendance/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
-            ->name('dashboard.MyWeekAttendance');
+        // Route::get('/my-attendance/week/{week}', [DashboardController::class, 'weekAttendance'])
+        //     ->name('dashboard.MyWeekAttendance');
 
-        Route::get('/attendance/teacher/{teacher}/weeks', [AttendanceController::class, 'teacherWeeks'])
+        Route::get('/teacher/{teacher}/weeks', [AttendanceController::class, 'teacherWeeks'])
             ->name('attendance.teacherWeeks');
-        Route::get('/attendance/teacher/{teacher}/week/{week}', [AttendanceController::class, 'teacherWeekAttendance'])
+        Route::get('/teacher/{teacher}/week/{week}', [AttendanceController::class, 'teacherWeekAttendance'])
             ->name('attendance.teacherWeekAttendance');
-        Route::delete('/attendance/{attendance}', [AttendanceController::class, 'destroy'])
+        Route::delete('/{attendance}', [AttendanceController::class, 'destroy'])
             ->middleware('can:lesson_delete')
             ->name('attendance.destroy');
 
         Route::get('/api/terms', [AttendanceController::class, 'getTerms']);
         Route::get('/api/weeks', [AttendanceController::class, 'getWeeks']);
+
+        Route::get('/class-attendance', [AttendanceController::class, 'classAttendance'])
+            ->name('classAttendance');
+        Route::get('/class-attendance/curriculum/{curriculum}', [AttendanceController::class, 'classAttendanceByCurriculum'])
+            ->name('classAttendanceByCurriculum');
+        Route::get('/class-attendance/curriculum/{curriculum}/{item}', [AttendanceController::class, 'classAttendanceByFormOrGrade'])
+            ->name('classAttendanceByFormOrGrade');
+        Route::get(
+            '/class-attendance/{curriculum}/{formOrGrade}/stream/{stream}',
+            [AttendanceController::class, 'classAttendanceByStream']
+        )
+            ->name('classAttendanceByStream');
+
+        Route::get(
+            '/class-attendance/{curriculum}/{formOrGrade}/{stream}/week/{week}',
+            [AttendanceController::class, 'classAttendanceWeekRecords']
+        )->name('classAttendanceWeekRecords');
     });
 
 
