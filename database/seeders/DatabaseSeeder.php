@@ -11,11 +11,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Run your custom seeders only
+        // Always required
         $this->call([
             RoleSeeder::class,
             PermissionSeeder::class,
-            LessonSeeder::class,
         ]);
+
+     
+        if (!app()->environment('production')) {
+            $this->call([
+                LessonSeeder::class,
+            ]);
+        }
     }
 }
