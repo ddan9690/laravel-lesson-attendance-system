@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PdfReportController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\Admin\LessonController;
@@ -169,11 +170,8 @@ Route::middleware(['auth'])->group(function () {
             ->name('classAttendanceByCurriculum');
         Route::get('/class-attendance/curriculum/{curriculum}/{item}', [AttendanceController::class, 'classAttendanceByFormOrGrade'])
             ->name('classAttendanceByFormOrGrade');
-        Route::get(
-            '/class-attendance/{curriculum}/{formOrGrade}/stream/{stream}',
-            [AttendanceController::class, 'classAttendanceByStream']
-        )
-            ->name('classAttendanceByStream');
+       Route::get('/class-attendance/{curriculum}/{formOrGrade}/stream/{stream}', [AttendanceController::class, 'classAttendanceByStream'])->name('classAttendanceByStream');
+
 
         Route::get(
             '/class-attendance/{curriculum}/{formOrGrade}/{stream}/week/{week}',
@@ -212,5 +210,8 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/admin/remedial/payments/student/{student}/pdf', [PdfController::class, 'generateStudentRemedialPDF'])
             ->name('remedial.payments.student.pdf');
+
+        Route::get('/admin/pdf/attendance/teachers-summary', [PdfReportController::class, 'teachersAttendanceSummaryPdf'])
+            ->name('pdf.attendance.teachers-summary');
     });
 });

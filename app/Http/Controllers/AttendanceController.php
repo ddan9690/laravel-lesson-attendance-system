@@ -26,10 +26,11 @@ class AttendanceController
         $curriculums = Curriculum::all();
 
         $forms = Form::with('streams')->get();
-        $formStreams = FormStream::all();
+        $formStreams = FormStream::orderBy('name')->get();
 
         $grades = Grade::with('streams')->get();
-        $gradeStreams = GradeStream::all();
+        $gradeStreams = GradeStream::orderBy('name')->get();
+
 
         $lessons = Lesson::all()->map(function ($lesson) {
             $lesson->start_time_formatted = \Carbon\Carbon::parse($lesson->start_time)->format('g:ia');
@@ -37,8 +38,9 @@ class AttendanceController
             return $lesson;
         });
 
-        $subjects = Subject::all();
-        $learningAreas = LearningArea::all();
+        $subjects = Subject::orderBy('name')->get();
+        $learningAreas = LearningArea::orderBy('name')->get();
+
 
         $academicYear = AcademicYear::where('active', 1)->firstOrFail();
 
@@ -260,13 +262,9 @@ class AttendanceController
         ]);
     }
 
-    public function classAttendanceByStream(
-        $curriculumId,
-        $formOrGradeId,
-        $streamId,
-        LessonAttendanceService $lessonService
-    ) {
-        $curriculum  = Curriculum::findOrFail($curriculumId);
+    public function classAttendanceByStream($curriculumId, $formOrGradeId, $streamId, LessonAttendanceService $lessonService)
+    {
+        $curriculum = Curriculum::findOrFail($curriculumId);
 
         if ($curriculum->name === '8-4-4') {
             $formOrGrade = Form::findOrFail($formOrGradeId);
@@ -274,9 +272,7 @@ class AttendanceController
             $formOrGrade = Grade::findOrFail($formOrGradeId);
         }
 
-        $stream = ($curriculum->name === '8-4-4')
-            ? $formOrGrade->streams()->findOrFail($streamId)
-            : $formOrGrade->streams()->findOrFail($streamId);
+        $stream = $formOrGrade->streams()->findOrFail($streamId);
 
         // Get weekly attendance summary for this stream
         $weekData = $lessonService->getClassAttendanceSummary(
@@ -293,37 +289,28 @@ class AttendanceController
         ]);
     }
 
-    public function classAttendanceWeekRecords(
-        $curriculumId,
-        $formOrGradeId,
-        $streamId,
-        $weekId
-    ) {
+    public function classAttendanceWeekRecords($curriculumId, $formOrGradeId, $streamId, $weekId)
+    {
         $curriculum = Curriculum::findOrFail($curriculumId);
         $week = Week::findOrFail($weekId);
 
-        $query = Attendance::with([
-            'lesson',
-            'teacher',
-            'subject',
-            'learningArea',
-        ])->where('week_id', $week->id);
-
         if ($curriculum->name === '8-4-4') {
-
             $formOrGrade = Form::findOrFail($formOrGradeId);
             $stream = FormStream::findOrFail($streamId);
-
-            $query->where('form_stream_id', $stream->id);
+            $query = Attendance::with(['lesson', 'teacher', 'subject', 'learningArea'])
+                ->where('week_id', $week->id)
+                ->where('form_stream_id', $stream->id);
         } else {
-
             $formOrGrade = Grade::findOrFail($formOrGradeId);
             $stream = GradeStream::findOrFail($streamId);
-
-            $query->where('grade_stream_id', $stream->id);
+            $query = Attendance::with(['lesson', 'teacher', 'subject', 'learningArea'])
+                ->where('week_id', $week->id)
+                ->where('grade_stream_id', $stream->id);
         }
 
-        $records = $query->get();
+        $records = $query->whereIn('status', ['attended', 'missed', 'makeup'])
+            ->orderBy('created_at', 'desc')
+            ->get();
 
         return view('attendance.class-attendance.week-records', compact(
             'curriculum',
@@ -333,7 +320,6 @@ class AttendanceController
             'records'
         ));
     }
-
 
 
     public function destroy(Attendance $attendance)
