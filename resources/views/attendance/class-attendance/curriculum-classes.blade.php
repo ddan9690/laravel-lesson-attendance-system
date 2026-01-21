@@ -13,11 +13,11 @@
         <h2 class="text-lg font-semibold text-gray-700 mb-2">Overall Attendance Summary</h2>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <div class="p-3 bg-green-50 border border-green-200 rounded text-center">
-                <p class="text-gray-600">Total Attended</p>
+                <p class="text-gray-600">Attended</p>
                 <p class="text-xl font-bold text-green-800">{{ $summary['total_attended'] }}</p>
             </div>
             <div class="p-3 bg-red-50 border border-red-200 rounded text-center">
-                <p class="text-gray-600">Total Missed</p>
+                <p class="text-gray-600">Missed</p>
                 <p class="text-xl font-bold text-red-800">{{ $summary['total_missed'] }}</p>
             </div>
         </div>
