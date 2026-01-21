@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>Teachers Lesson Attendance Summary</title>
@@ -8,101 +9,173 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            color: #111827;
+            /* text-dark */
         }
+
         .container {
             max-width: 100%;
             margin: 20px auto;
             padding: 20px;
             text-align: center;
         }
+
         .logo {
-            max-width: 150px;
+            max-width: 50px;
+            /* reduced logo size */
             margin: 0 auto 10px;
             display: block;
         }
+
+        .school-name {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1E7D3D;
+            /* school-green */
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .sub-heading {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1E7D3D;
+            /* school-green */
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+
+        .period {
+            font-size: 10px;
+            margin-bottom: 10px;
+            color: #111827;
+            text-transform: uppercase;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
-            margin: 0 auto;
-            margin-bottom: 20px;
+            margin: 0 auto 20px auto;
             font-family: Arial, sans-serif;
         }
-        table, th, td {
-            border: 1px solid #000;
+
+        table,
+        th,
+        td {
+            border: 1px solid #555;
+            /* neutral gray for print */
             font-size: 10px;
         }
-        th, td {
-            padding: 4px;
-            text-transform: uppercase;
-        }
+
         th {
-            background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-        th, td {
-            white-space: nowrap;
-        }
-        .header-text {
-            text-transform: uppercase;
+            background-color: transparent;
+            color: #1E7D3D;
             font-weight: bold;
-            text-align: center;
-            font-family: Arial, sans-serif;
-            margin-bottom: 10px;
+            text-transform: uppercase;
+            padding: 5px;
         }
+
+        td {
+            padding: 4px;
+            text-align: center;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #F9FAFB;
+            /* subtle for digital */
+        }
+
         td.total {
             font-weight: bold;
+            color: #1E7D3D;
+        }
+
+        .timestamp {
+            text-align: right;
+            font-size: 8px;
+            color: #111827;
         }
     </style>
 </head>
+
 <body>
     <div class="container">
 
-        @if(file_exists(public_path('backend/img/logo/cyberspace-national-joint-logo.png')))
-            <img src="{{ public_path('backend/img/logo/cyberspace-national-joint-logo.png') }}" alt="Logo" class="logo">
+        {{-- School Logo --}}
+        @if (file_exists(public_path('remedialsystem/assets/img/logo.png')))
+            <img src="{{ public_path('remedialsystem/assets/img/logo.png') }}" alt="Logo" class="logo">
         @endif
 
-        <div class="header-text">
-            TEACHERS LESSON ATTENDANCE SUMMARY
-            <div>
-                {{ $currentYear->name ?? '' }}
-                @if($currentTerm)
-                    — {{ $currentTerm->name }}
-                @endif
-                @if($fromDate || $toDate)
-                    <br>Period: {{ $fromDate ?? 'BEGINNING' }} TO {{ $toDate ?? 'TODAY' }}
-                @endif
-            </div>
+        {{-- School Name --}}
+        <div class="school-name">
+            MOI NYABOHANSE GIRLS HIGH SCHOOL
         </div>
 
+        {{-- Academic Year & Term --}}
+        <div class="sub-heading">
+            {{ $currentYear->year ?? '' }}
+            @if ($currentTerm)
+                — {{ $currentTerm->name }}
+            @endif
+        </div>
+
+        {{-- Period --}}
+        <div class="period">
+            @if (!$fromDate && !$toDate)
+                REMEDIAL LESSON ATTENDANCE FOR {{ $currentTerm->name ?? '' }}
+            @else
+                REMEDIAL LESSON ATTENDANCE FROM
+                {{ $fromDate ? \Carbon\Carbon::parse($fromDate)->format('d/m/y') : 'BEGINNING' }}
+                TO {{ $toDate ? \Carbon\Carbon::parse($toDate)->format('d/m/y') : 'TODAY' }}
+            @endif
+        </div>
+
+        {{-- Attendance Table --}}
         <table>
             <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Teacher Name</th>
-                    <th>CBC Lessons</th>
-                    <th>8-4-4 Lessons</th>
-                    <th>Total Lessons</th>
+                    <th rowspan="2">#</th>
+                    <th rowspan="2">Teacher</th>
+                    <th colspan="2">8-4-4</th>
+                    <th colspan="2">CBC</th>
+                    <th rowspan="2">Total</th>
+                </tr>
+                <tr>
+                    <th>Taught</th>
+                    <th>Missed</th>
+                    <th>Taught</th>
+                    <th>Missed</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($lessonAttendanceSummary as $index => $summary)
-                <tr>
-                    <td>{{ $index + 1 }}</td>
-                    <td>{{ strtoupper($summary['teacher']->name ?? 'N/A') }}</td>
-                    <td>{{ $summary['cbc'] }}</td>
-                    <td>{{ $summary['eight_four_four'] }}</td>
-                    <td class="total">{{ $summary['total'] }}</td>
-                </tr>
+                    <tr>
+                        <td>{{ $index + 1 }}</td>
+                        <td style="text-align: left; padding-left: 5px;">
+                            {{ strtoupper($summary['teacher']->name ?? 'N/A') }}
+                        </td>
+                        <td>{{ $summary['eight_four_four_taught'] }}</td>
+                        <td>{{ $summary['eight_four_four_missed'] }}</td>
+                        <td>{{ $summary['cbc_taught'] }}</td>
+                        <td>{{ $summary['cbc_missed'] }}</td>
+                        <td class="total" style="font-weight: bold; color: #000;">
+                            {{ $summary['total_lessons'] }}
+                        </td>
+                    </tr>
                 @empty
-                <tr>
-                    <td colspan="5">No attendance data available.</td>
-                </tr>
+                    <tr>
+                        <td colspan="7">No attendance data available.</td>
+                    </tr>
                 @endforelse
             </tbody>
         </table>
 
+        {{-- Generated timestamp --}}
+        <div class="timestamp">
+            Generated at: {{ \Carbon\Carbon::parse($generatedAt)->format('d/m/y H:i') }}
+        </div>
+
     </div>
 </body>
+
 </html>

@@ -17,22 +17,20 @@ class PdfReportController
         $this->lessonAttendanceService = $lessonAttendanceService;
     }
 
-    /**
-     * Download Teachers Lesson Attendance Summary (Committee)
-     */
+  
     public function teachersAttendanceSummaryPdf(Request $request)
     {
-        // Filters
+      
         $from = $request->from;
         $to   = $request->to;
 
-        // Active academic context
+      
         $currentYear = AcademicYear::where('active', true)->first();
         $currentTerm = Term::where('active', true)
             ->where('academic_year_id', $currentYear->id ?? 0)
             ->first();
 
-        // Attendance summary (same data as dashboard)
+    
         $lessonAttendanceSummary =
             $this->lessonAttendanceService->getAllTeachersAttendanceSummary(
                 null,
@@ -42,26 +40,46 @@ class PdfReportController
                 $to
             );
 
-        // Generate PDF
+      
+        $summaryWithTaughtMissed = $lessonAttendanceSummary->map(function($summary) {
+            // 8-4-4
+            $eightFourFourTaught = $summary['eight_four_four'];
+            $eightFourFourMissed = ($summary['eight_four_four_total'] ?? $eightFourFourTaught) - $eightFourFourTaught;
+
+            // CBC
+            $cbcTaught = $summary['cbc'];
+            $cbcMissed = ($summary['cbc_total'] ?? $cbcTaught) - $cbcTaught;
+
+            $totalLessons = $eightFourFourTaught + $eightFourFourMissed + $cbcTaught + $cbcMissed;
+
+            return array_merge($summary, [
+                'eight_four_four_taught' => $eightFourFourTaught,
+                'eight_four_four_missed' => $eightFourFourMissed,
+                'cbc_taught' => $cbcTaught,
+                'cbc_missed' => $cbcMissed,
+                'total_lessons' => $totalLessons,
+            ]);
+        });
+
+   
         $pdf = Pdf::loadView(
             'attendance.pdf-exports.teachers-attendance-summary',
             [
-                'lessonAttendanceSummary' => $lessonAttendanceSummary,
+                'lessonAttendanceSummary' => $summaryWithTaughtMissed,
                 'currentYear' => $currentYear,
                 'currentTerm' => $currentTerm,
                 'fromDate' => $from,
                 'toDate' => $to,
                 'generatedAt' => now(),
             ]
-        )->setPaper('a4', 'landscape');
+        );
 
-        // File name
+    
         $fileName =
             'teachers_lesson_attendance_summary_' .
             now()->format('Y_m_d_His') .
             '.pdf';
 
-        // Download PDF
         return $pdf->download($fileName);
     }
 }
