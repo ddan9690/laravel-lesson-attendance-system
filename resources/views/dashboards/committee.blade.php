@@ -16,10 +16,10 @@
 
             <a href="{{ route('dashboard.myAttendance') }}"
                class="bg-blue-600 text-white px-3 py-1 md:px-4 md:py-2 rounded-lg shadow hover:bg-blue-700 font-semibold text-sm md:text-base">
-                View My Lesson Attendance
+                My Lessons
             </a>
 
-           <a href="{{ route('classAttendance') }}" class="bg-teal-600 text-white px-3 py-1 md:px-4 md:py-2 rounded-lg shadow hover:bg-teal-700 focus:bg-teal-700 focus:outline-none active:bg-teal-800 font-semibold text-sm md:text-base transition">View Class Attendance</a>
+           <a href="{{ route('classAttendance') }}" class="bg-teal-600 text-white px-3 py-1 md:px-4 md:py-2 rounded-lg shadow hover:bg-teal-700 focus:bg-teal-700 focus:outline-none active:bg-teal-800 font-semibold text-sm md:text-base transition">Class Attendance</a>
 
         </div>
 
