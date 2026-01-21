@@ -17,20 +17,20 @@ class PdfReportController
         $this->lessonAttendanceService = $lessonAttendanceService;
     }
 
-  
+
     public function teachersAttendanceSummaryPdf(Request $request)
     {
-      
+
         $from = $request->from;
         $to   = $request->to;
 
-      
+
         $currentYear = AcademicYear::where('active', true)->first();
         $currentTerm = Term::where('active', true)
             ->where('academic_year_id', $currentYear->id ?? 0)
             ->first();
 
-    
+
         $lessonAttendanceSummary =
             $this->lessonAttendanceService->getAllTeachersAttendanceSummary(
                 null,
@@ -40,8 +40,8 @@ class PdfReportController
                 $to
             );
 
-      
-        $summaryWithTaughtMissed = $lessonAttendanceSummary->map(function($summary) {
+
+        $summaryWithTaughtMissed = $lessonAttendanceSummary->map(function ($summary) {
             // 8-4-4
             $eightFourFourTaught = $summary['eight_four_four'];
             $eightFourFourMissed = ($summary['eight_four_four_total'] ?? $eightFourFourTaught) - $eightFourFourTaught;
@@ -61,7 +61,7 @@ class PdfReportController
             ]);
         });
 
-   
+
         $pdf = Pdf::loadView(
             'attendance.pdf-exports.teachers-attendance-summary',
             [
@@ -74,11 +74,8 @@ class PdfReportController
             ]
         );
 
-    
-        $fileName =
-            'teachers_lesson_attendance_summary_' .
-            now()->format('Y_m_d_His') .
-            '.pdf';
+
+        $fileName = 'remedial-attendance-' . now()->format('d-m-y-His') . '.pdf';
 
         return $pdf->download($fileName);
     }
