@@ -10,19 +10,19 @@
     </h1>
 
     <h2 class="text-lg text-gray-700 mb-4">
-         {{ $currentYear->year ?? 'N/A' }} | Term: {{ $currentTerm->name ?? 'N/A' }}
+         {{ $currentYear->year ?? 'N/A' }} | {{ $currentTerm->name ?? 'N/A' }}
     </h2>
 
     @if($attendanceRecords->isNotEmpty())
         <div class="bg-white shadow rounded-lg p-3 overflow-x-auto">
-            <table class="min-w-full table-fixed text-sm md:text-base">
+            <table class="min-w-full table-fixed text-sm md:text-base border-collapse border border-green-200">
                 <thead class="bg-green-600 text-white uppercase">
                     <tr>
+                        <th class="px-2 py-1 text-left">#</th>
                         <th class="px-2 py-1 text-left">Date</th>
-                        <th class="px-2 py-1 text-left">CURR</th>
-                        <th class="px-2 py-1 text-left">Lesson</th>
-                        <th class="px-2 py-1 text-left">LA/SUB</th>
+                        <th class="px-2 py-1 text-left">Class</th>
                         <th class="px-2 py-1 text-left">Time</th>
+                        <th class="px-2 py-1 text-left">SUB/LA</th>
                         <th class="px-2 py-1 text-center">Status</th>
                         <th class="px-2 py-1 text-left">CB</th>
                         <th class="px-2 py-1 text-center">Actions</th>
@@ -32,7 +32,7 @@
                     @foreach($attendanceRecords as $record)
                         @php
                             $date = $record->lesson->date ?? $record->created_at;
-                            $formattedDate = \Carbon\Carbon::parse($date)->format('D d M y');
+                            $formattedDate = \Carbon\Carbon::parse($date)->format('D d M'); 
 
                             $statusIcon = match($record->status) {
                                 'attended' => '<i class="bx bx-check-circle text-green-700 text-lg"></i>',
@@ -46,18 +46,26 @@
                                         ->map(fn($n) => strtoupper(substr($n,0,1)))
                                         ->join('');
 
-                            $curriculumName = $record->curriculum->name ?? 'N/A';
+                            // Show Learning Area first, fallback to Subject
+                            $subOrLa = $record->learningArea->name ?? $record->subject->name ?? '-';
+
+                            // Build Class string
+                            if($record->form_id && $record->form_stream_id) {
+                                $class = ($record->form->name ?? 'Form') . ' ' . ($record->formStream->name ?? '');
+                            } elseif($record->grade_id && $record->grade_stream_id) {
+                                $class = ($record->grade->name ?? 'Grade') . ' ' . ($record->gradeStream->name ?? '');
+                            } else {
+                                $class = '-';
+                            }
+
+                            $time = $record->lesson->start_time ? \Carbon\Carbon::parse($record->lesson->start_time)->format('g:i a') : 'N/A';
                         @endphp
                         <tr class="border-b border-green-200 even:bg-green-50 hover:bg-green-100">
+                            <td class="px-2 py-1 whitespace-nowrap">{{ $loop->iteration }}</td>
                             <td class="px-2 py-1 whitespace-nowrap">{{ $formattedDate }}</td>
-                            <td class="px-2 py-1 whitespace-nowrap">{{ $curriculumName }}</td>
-                            <td class="px-2 py-1 whitespace-nowrap">{{ $record->lesson->name ?? 'N/A' }}</td>
-                            <td class="px-2 py-1 whitespace-nowrap">
-                                {{ $record->learningArea->name ?? $record->subject->name ?? '-' }}
-                            </td>
-                            <td class="px-2 py-1 whitespace-nowrap">
-                                {{ $record->lesson->start_time ? \Carbon\Carbon::parse($record->lesson->start_time)->format('g:ia') : 'N/A' }}
-                            </td>
+                            <td class="px-2 py-1 whitespace-nowrap">{{ $class }}</td>
+                            <td class="px-2 py-1 whitespace-nowrap">{{ $time }}</td>
+                            <td class="px-2 py-1 whitespace-nowrap">{{ $subOrLa }}</td>
                             <td class="px-2 py-1 whitespace-nowrap text-center">{!! $statusIcon !!}</td>
                             <td class="px-2 py-1 whitespace-nowrap">{{ $initials }}</td>
                             <td class="px-2 py-1 text-center">

@@ -24,36 +24,24 @@ class AttendanceController
     public function create()
     {
         $curriculums = Curriculum::all();
-
         $forms = Form::with('streams')->get();
         $formStreams = FormStream::orderBy('name')->get();
-
         $grades = Grade::with('streams')->get();
         $gradeStreams = GradeStream::orderBy('name')->get();
-
-
         $lessons = Lesson::all()->map(function ($lesson) {
             $lesson->start_time_formatted = \Carbon\Carbon::parse($lesson->start_time)->format('g:ia');
             $lesson->end_time_formatted = \Carbon\Carbon::parse($lesson->end_time)->format('g:ia');
             return $lesson;
         });
-
         $subjects = Subject::orderBy('name')->get();
         $learningAreas = LearningArea::orderBy('name')->get();
-
-
         $academicYear = AcademicYear::where('active', 1)->firstOrFail();
-
         $term = Term::where('academic_year_id', $academicYear->id)
             ->where('active', 1)
             ->firstOrFail();
-
         $weeks = Week::where('term_id', $term->id)->get();
-
         $users = User::where('email', '!=', 'dancanokeyo08@gmail.com')
-            ->orderBy('name', 'asc')
-            ->get();
-
+            ->orderBy('name', 'asc')->get();
 
         return view('attendance.create', compact(
             'curriculums',
