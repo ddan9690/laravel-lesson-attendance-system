@@ -86,31 +86,43 @@ class DashboardController
     {
         $user = Auth::user();
 
-        // Only date range filters
+        // Date range filters
         $from = $request->from;
         $to   = $request->to;
 
-      
-        $lessonAttendanceSummary = $this->lessonAttendanceService->getAllTeachersAttendanceSummary(
-            null,   // year
-            null,   // term
-            [],    
-            $from,
-            $to
-        );
+        // Get attendance summary (already filtered by date if provided)
+        $lessonAttendanceSummary = $this->lessonAttendanceService
+            ->getAllTeachersAttendanceSummary(
+                null,   // year (default active)
+                null,   // term (default active)
+                [],     // weeks
+                $from,
+                $to
+            );
+
+        // === TOTALS FOR FOOTER ===
+        $totalCBC = $lessonAttendanceSummary->sum('cbc');
+        $total844 = $lessonAttendanceSummary->sum('eight_four_four');
+        $grandTotal = $lessonAttendanceSummary->sum('total');
 
         return view('dashboards.committee', [
             'user' => $user,
             'role' => $user->getRoleNames()->first(),
 
-  
+            // Table data
             'lessonAttendanceSummary' => $lessonAttendanceSummary,
 
+            // Footer totals
+            'totalCBC' => $totalCBC,
+            'total844' => $total844,
+            'grandTotal' => $grandTotal,
 
+            // Filters
             'fromDate' => $from,
             'toDate' => $to,
         ]);
     }
+
 
 
     /**

@@ -63,7 +63,7 @@
         }
 
         th {
-            background-color: transparent;
+            background-color: #E6F4EA;
             color: #1E7D3D;
             font-weight: bold;
             text-transform: uppercase;
@@ -75,6 +75,11 @@
             text-align: center;
         }
 
+        td.left {
+            text-align: left;
+            padding-left: 5px;
+        }
+
         tr:nth-child(even) td {
             background-color: #F9FAFB;
         }
@@ -82,6 +87,11 @@
         td.total {
             font-weight: bold;
             color: #1E7D3D;
+        }
+
+        tfoot td {
+            font-weight: bold;
+            background-color: #D1F2D8;
         }
 
         .timestamp {
@@ -95,18 +105,22 @@
 <body>
     <div class="container">
 
+        {{-- Logo --}}
         @if (file_exists(public_path('remedialsystem/assets/img/logo.png')))
             <img src="{{ public_path('remedialsystem/assets/img/logo.png') }}" alt="Logo" class="logo">
         @endif
 
+        {{-- School Name --}}
         <div class="school-name">MOI NYABOHANSE GIRLS HIGH SCHOOL</div>
 
+        {{-- Academic Year & Term --}}
         <div class="sub-heading">
             {{ $currentYear->year ?? '' }} @if ($currentTerm)
                 — {{ $currentTerm->name }}
             @endif
         </div>
 
+        {{-- Period Info --}}
         <div class="period">
             @if (!$fromDate && !$toDate)
                 REMEDIAL LESSON ATTENDANCE FOR {{ $currentTerm->name ?? '' }}
@@ -117,6 +131,7 @@
             @endif
         </div>
 
+        {{-- Attendance Table --}}
         <table>
             <thead>
                 <tr>
@@ -137,8 +152,7 @@
                 @forelse($lessonAttendanceSummary as $index => $summary)
                     <tr>
                         <td>{{ $index + 1 }}</td>
-                        <td style="text-align: left; padding-left: 5px;">
-                            {{ strtoupper($summary['teacher']->name ?? 'N/A') }}</td>
+                        <td class="left">{{ strtoupper($summary['teacher']->name ?? 'N/A') }}</td>
                         <td>{{ $summary['eight_four_four_taught'] ?? 0 }}</td>
                         <td>{{ $summary['eight_four_four_missed'] ?? 0 }}</td>
                         <td>{{ $summary['cbc_taught'] ?? 0 }}</td>
@@ -151,14 +165,25 @@
                     </tr>
                 @endforelse
             </tbody>
+
+            {{-- Footer Totals --}}
+            <tfoot>
+                <tr>
+                    <td colspan="2">TOTAL</td>
+                    <td>{{ $totalEightFourFourTaught ?? 0 }}</td>
+                    <td>{{ $totalEightFourFourMissed ?? 0 }}</td>
+                    <td>{{ $totalCbcTaught ?? 0 }}</td>
+                    <td>{{ $totalCbcMissed ?? 0 }}</td>
+                    <td class="total">{{ $grandTotalLessons ?? 0 }}</td>
+                </tr>
+            </tfoot>
         </table>
 
+        {{-- Timestamp --}}
         <div class="timestamp">
             Generated at:
             {{ \Carbon\Carbon::parse($generatedAt)->setTimezone('Africa/Nairobi')->format('d/m/y g:i a') }}
         </div>
-
-
 
     </div>
 </body>
