@@ -91,21 +91,21 @@ services:
                 "--timeout=90",
             ]
 
-    scheduler:
-        <<: *app
-        depends_on:
-            app:
-                condition: service_healthy
-        command: ["php", "artisan", "schedule:work"]
-        environment:
-            <<: *app-env
-            RUN_MIGRATIONS: "false"
-            RUN_OPTIMIZE: "false"
-        deploy:
-            resources:
-                limits:
-                    cpus: "0.25"
-                    memory: 256M
+    # scheduler:
+    #     <<: *app
+    #     depends_on:
+    #         app:
+    #             condition: service_healthy
+    #     command: ["php", "artisan", "schedule:work"]
+    #     environment:
+    #         <<: *app-env
+    #         RUN_MIGRATIONS: "false"
+    #         RUN_OPTIMIZE: "false"
+    #     deploy:
+    #         resources:
+    #             limits:
+    #                 cpus: "0.25"
+    #                 memory: 256M
 
     mariadb:
         image: mariadb:10.6
