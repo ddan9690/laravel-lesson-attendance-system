@@ -1,24 +1,22 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\LessonController;
+use App\Http\Controllers\Admin\ManageClassController;
+use App\Http\Controllers\Admin\PaymentsController;
+use App\Http\Controllers\Admin\Pdf\PdfController;
+use App\Http\Controllers\Admin\PromotionController;
+use App\Http\Controllers\Admin\RemedialController;
+use App\Http\Controllers\Admin\StreamController;
+use App\Http\Controllers\Admin\StudentController;
+use App\Http\Controllers\Admin\SubjectLearningAreaController;
+use App\Http\Controllers\Admin\TeacherController;
+use App\Http\Controllers\AttendanceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PdfReportController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\AttendanceController;
-use App\Http\Controllers\Admin\LessonController;
-use App\Http\Controllers\Admin\StreamController;
-use App\Http\Controllers\Admin\Pdf\PdfController;
-use App\Http\Controllers\Admin\StudentController;
-use App\Http\Controllers\Admin\TeacherController;
-use App\Http\Controllers\Admin\PaymentsController;
-use App\Http\Controllers\Admin\RemedialController;
-use App\Http\Controllers\Admin\PromotionController;
-use App\Http\Controllers\Admin\ManageClassController;
 use App\Http\Controllers\TeacherAssignmentController;
-use App\Http\Controllers\Admin\SubjectLearningAreaController;
+use Illuminate\Support\Facades\Route;
 
-require __DIR__ . '/auth.php';
-
+require __DIR__.'/auth.php';
 
 // ==========================================================
 // AUTHENTICATED ROUTES
@@ -170,17 +168,13 @@ Route::middleware(['auth'])->group(function () {
             ->name('classAttendanceByCurriculum');
         Route::get('/class-attendance/curriculum/{curriculum}/{item}', [AttendanceController::class, 'classAttendanceByFormOrGrade'])
             ->name('classAttendanceByFormOrGrade');
-       Route::get('/class-attendance/{curriculum}/{formOrGrade}/stream/{stream}', [AttendanceController::class, 'classAttendanceByStream'])->name('classAttendanceByStream');
-
+        Route::get('/class-attendance/{curriculum}/{formOrGrade}/stream/{stream}', [AttendanceController::class, 'classAttendanceByStream'])->name('classAttendanceByStream');
 
         Route::get(
             '/class-attendance/{curriculum}/{formOrGrade}/{stream}/week/{week}',
             [AttendanceController::class, 'classAttendanceWeekRecords']
         )->name('classAttendanceWeekRecords');
     });
-
-
-
 
     // ======================================================
     // REMEDIAL & PAYMENTS

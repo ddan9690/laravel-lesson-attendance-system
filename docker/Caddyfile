@@ -1,0 +1,18 @@
+{
+	skip_install_trust
+	auto_https off
+
+	frankenphp {
+		{$FRANKENPHP_CONFIG}
+	}
+
+	servers {
+		trusted_proxies static private_ranges
+	}
+}
+
+:8080 {
+	root * /app/public
+	encode zstd br gzip
+	php_server
+}

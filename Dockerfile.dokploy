@@ -1,0 +1,100 @@
+# syntax=docker/dockerfile:1
+
+# There is no host Dockerfile (old deploy used bitnami/laravel:10 bind-mounts).
+# Dokploy compose builds this image. Laravel 10 supports PHP 8.1–8.3.
+
+FROM dunglas/frankenphp:1-php8.3-bookworm AS base
+
+WORKDIR /app
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        default-mysql-client \
+        unzip \
+    && rm -rf /var/lib/apt/lists/* \
+    && install-php-extensions \
+        bcmath \
+        exif \
+        gd \
+        intl \
+        mbstring \
+        opcache \
+        pcntl \
+        pdo_mysql \
+        redis \
+        zip \
+    && cp "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini"
+
+COPY docker/php.ini "$PHP_INI_DIR/conf.d/99-laravel.ini"
+COPY docker/Caddyfile /etc/caddy/Caddyfile
+RUN ln -sf /etc/caddy/Caddyfile /etc/frankenphp/Caddyfile \
+    && setcap -r /usr/local/bin/frankenphp \
+    && setcap -r /usr/local/bin/php || true
+
+FROM base AS build
+
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+COPY --from=node:22-bookworm /usr/local/bin/node /usr/local/bin/node
+COPY --from=node:22-bookworm /usr/local/lib/node_modules /usr/local/lib/node_modules
+
+RUN ln -sf /usr/local/lib/node_modules/npm/bin/npm-cli.js /usr/local/bin/npm \
+    && ln -sf /usr/local/lib/node_modules/npm/bin/npx-cli.js /usr/local/bin/npx
+
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV COMPOSER_ALLOW_SUPERUSER=1 \
+    COMPOSER_NO_INTERACTION=1
+
+COPY composer.json composer.lock ./
+RUN composer install \
+        --no-dev \
+        --no-scripts \
+        --no-autoloader \
+        --prefer-dist
+
+COPY package.json package-lock.json ./
+RUN npm ci
+
+COPY . .
+RUN mkdir -p \
+        storage/app/public \
+        storage/framework/cache/data \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/logs \
+        bootstrap/cache \
+    && cp .env.example .env \
+    && composer dump-autoload --optimize --no-dev \
+    && php artisan package:discover --ansi --no-interaction \
+    && php artisan key:generate --force --no-interaction \
+    && npm run build \
+    && rm -rf node_modules .env
+
+FROM base AS production
+
+COPY docker/entrypoint.dokploy.sh /usr/local/bin/app-entrypoint
+RUN chmod +x /usr/local/bin/app-entrypoint
+
+COPY --from=build /app /app
+
+RUN mkdir -p \
+        storage/app/public \
+        storage/framework/cache/data \
+        storage/framework/sessions \
+        storage/framework/views \
+        storage/logs \
+        bootstrap/cache \
+    && ln -sfn /app/storage/app/public /app/public/storage \
+    && chown -R www-data:www-data storage bootstrap/cache /config /data
+
+VOLUME ["/app/storage"]
+
+ENV SERVER_NAME=":8080"
+
+EXPOSE 8080
+
+ENTRYPOINT ["app-entrypoint"]
+CMD ["--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]

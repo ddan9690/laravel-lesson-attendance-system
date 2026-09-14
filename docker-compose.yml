@@ -1,0 +1,162 @@
+# Dokploy: set the app domain on `app` port 8080 and Adminer on `adminer` port 8080.
+# Paste production secrets into the Environment tab (written to .env).
+# Builds from Dockerfile.dokploy (old host used bitnami/laravel:10 bind-mounts).
+#
+# Required in the Environment tab:
+#   APP_KEY, APP_URL, APP_ENV=production
+#   DB_DATABASE, DB_USERNAME, DB_PASSWORD, MARIADB_ROOT_PASSWORD
+#
+# Compose sets DB_HOST=mariadb and REDIS_HOST=redis.
+# Named volume `storage` persists uploads/logs. Restore the old MariaDB dump
+# via Adminer before relying on the app.
+
+x-app-env: &app-env
+  DB_CONNECTION: mysql
+  DB_HOST: mariadb
+  DB_PORT: "3306"
+  REDIS_HOST: redis
+  REDIS_PORT: "6379"
+  REDIS_CLIENT: phpredis
+  CACHE_DRIVER: redis
+  SESSION_DRIVER: redis
+  QUEUE_CONNECTION: redis
+
+x-app: &app
+  image: ${COMPOSE_PROJECT_NAME:-remedial}-app:latest
+  build:
+    context: .
+    dockerfile: Dockerfile.dokploy
+  env_file:
+    - .env
+  environment:
+    <<: *app-env
+  volumes:
+    - storage:/app/storage
+  restart: unless-stopped
+  init: true
+  deploy:
+    resources:
+      limits:
+        cpus: "1.0"
+        memory: 1G
+
+x-queue: &queue
+  <<: *app
+  depends_on:
+    app:
+      condition: service_healthy
+  stop_grace_period: 120s
+  environment:
+    <<: *app-env
+    RUN_MIGRATIONS: "false"
+    RUN_OPTIMIZE: "false"
+  deploy:
+    resources:
+      limits:
+        cpus: "0.5"
+        memory: 512M
+
+services:
+  app:
+    <<: *app
+    expose:
+      - "8080"
+    command: ["--config", "/etc/frankenphp/Caddyfile", "--adapter", "caddyfile"]
+    environment:
+      <<: *app-env
+      RUN_MIGRATIONS: "true"
+    depends_on:
+      mariadb:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8080/up || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 180s
+
+  queue:
+    <<: *queue
+    command: ["php", "artisan", "queue:work", "--queue=default", "--sleep=3", "--tries=3", "--timeout=90"]
+
+  scheduler:
+    <<: *app
+    depends_on:
+      app:
+        condition: service_healthy
+    command: ["php", "artisan", "schedule:work"]
+    environment:
+      <<: *app-env
+      RUN_MIGRATIONS: "false"
+      RUN_OPTIMIZE: "false"
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+
+  mariadb:
+    image: mariadb:10.6
+    env_file:
+      - .env
+    environment:
+      MARIADB_DATABASE: ${DB_DATABASE}
+      MARIADB_USER: ${DB_USERNAME}
+      MARIADB_PASSWORD: ${DB_PASSWORD}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
+      MARIADB_AUTO_UPGRADE: "1"
+    volumes:
+      - mariadb:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.25"
+          memory: 256M
+
+  adminer:
+    image: adminer
+    expose:
+      - "8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: mariadb
+    command: ["php", "-d", "post_max_size=1G", "-d", "upload_max_filesize=1G", "-S", "0.0.0.0:8080", "-t", "/var/www/html"]
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+
+volumes:
+  storage:
+  mariadb:
+  redis:
